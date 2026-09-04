@@ -1,0 +1,792 @@
+[
+ {
+  "id": "S1-kunal-fresher",
+  "who": "Kunal, 24, Bengaluru, salaried fresher (<1yr startup), high card use.",
+  "blanks": "S1 skipped.",
+  "answers": {
+   "purpose": "personal",
+   "product": "personal",
+   "wanted": 300000,
+   "income_type": "a",
+   "income_self": 45000,
+   "co_income": 0,
+   "co_active": false,
+   "old_emi": 0,
+   "bounce": "no",
+   "expenses": 22000,
+   "age": 24,
+   "score": "700-750",
+   "buffer": "1-2",
+   "job_vintage": "<1yr",
+   "employer": "startup",
+   "card_util": ">70%",
+   "branch_answers": {
+    "A-S1": "<1yr",
+    "A-S3": ">70%"
+   }
+  },
+  "outputs": {
+   "income": {
+    "income_safe": 45000.0,
+    "income_lender": 45000.0,
+    "co_counts_safe": false
+   },
+   "months": 60,
+   "std_months": 60,
+   "foir_cap": 0.55,
+   "ceiling": 24750.0,
+   "rate": {
+    "low": 13.5,
+    "high": 16.5,
+    "mid": 15.0,
+    "base": [
+     10.0,
+     18.0
+    ],
+    "adj": 1.0,
+    "notes": [
+     "score 700-750 -0.5%",
+     "new job +0.5%",
+     "card >70% +1%"
+    ],
+    "unknown": false
+   },
+   "amount": {
+    "lender": 1165000.0,
+    "safe": 1040000.0,
+    "use": 1040000.0,
+    "wanted": 300000.0,
+    "borrow_less": false,
+    "lender_emi_cap": 24750.0,
+    "safe_emi_cap": 24750.0
+   },
+   "new_emi": 7136.98,
+   "surplus": 15863.02,
+   "expenses_used": 22000.0,
+   "estimated_exp": false,
+   "old_emi_unknown": false,
+   "age_given": true,
+   "foir_actual": 0.1586,
+   "stress_pass": true,
+   "extra": 0.0,
+   "verdict": {
+    "verdict": "Borrow",
+    "reason": "Surplus positive, within FOIR cap, passes stress.",
+    "flip": "Stay under EMI ceiling."
+   },
+   "confidence": {
+    "level": "High",
+    "unknowns": 0,
+    "o2_widen": 0.0,
+    "o3_widen": 0.0
+   },
+   "fair_apr": [
+    13.5,
+    16.5
+   ],
+   "card": {
+    "lines": [
+     "Fair for your profile: 13.5% - 16.5%",
+     "EMI ceiling: Rs.24,750/month. Do not cross it.",
+     "Why: score 700-750 -0.5%; new job +0.5%; card >70% +1%.",
+     "No offer entered: show this card before accepting any quote.",
+     "Warning: Surplus positive, within FOIR cap, passes stress. [Borrow]"
+    ]
+   },
+   "why": {
+    "o2": "Use Rs.1,040,000 because bank sees Rs.1,165,000 but safe is Rs.1,040,000.",
+    "o3": "Fair 13.5-16.5% because score 700-750 -0.5%; new job +0.5%.",
+    "o4": "Ceiling Rs.24,750 because income x FOIR minus old EMI; stress passes."
+   }
+  }
+ },
+ {
+  "id": "S2-lakshmi-near-retire",
+  "who": "Lakshmi, 55, Chennai, salaried teacher, wants home loan near retirement.",
+  "blanks": "S1 skipped.",
+  "answers": {
+   "purpose": "home",
+   "product": "home",
+   "wanted": 3000000,
+   "income_type": "a",
+   "income_self": 90000,
+   "co_income": 0,
+   "co_active": false,
+   "old_emi": 10000,
+   "bounce": "no",
+   "expenses": 40000,
+   "age": 55,
+   "score": "750+",
+   "buffer": "3+",
+   "job_vintage": "5yr+",
+   "employer": "govt",
+   "card_util": "<30%",
+   "branch_answers": {
+    "A-S1": "5yr+"
+   }
+  },
+  "outputs": {
+   "income": {
+    "income_safe": 90000.0,
+    "income_lender": 90000.0,
+    "co_counts_safe": false
+   },
+   "months": 60,
+   "std_months": 60,
+   "foir_cap": 0.55,
+   "ceiling": 39500.0,
+   "rate": {
+    "low": 8.4,
+    "high": 9.9,
+    "mid": 9.15,
+    "base": [
+     8.4,
+     9.8
+    ],
+    "adj": -1.5,
+    "notes": [
+     "score 750+ -1%",
+     "stable job -0.5%"
+    ],
+    "unknown": false
+   },
+   "amount": {
+    "lender": 1930000.0,
+    "safe": 1896000.0,
+    "use": 1896000.0,
+    "wanted": 3000000.0,
+    "borrow_less": true,
+    "lender_emi_cap": 39500.0,
+    "safe_emi_cap": 39500.0
+   },
+   "new_emi": 62493.69,
+   "surplus": -22493.69,
+   "expenses_used": 40000.0,
+   "estimated_exp": false,
+   "old_emi_unknown": false,
+   "age_given": true,
+   "foir_actual": 0.8055,
+   "stress_pass": false,
+   "extra": 0.0,
+   "verdict": {
+    "verdict": "Don't borrow",
+    "reason": "Surplus Rs.-22,494 below zero after new EMI.",
+    "flip": "Lower amount or longer tenure until surplus stays above zero."
+   },
+   "confidence": {
+    "level": "High",
+    "unknowns": 0,
+    "o2_widen": 0.0,
+    "o3_widen": 0.0
+   },
+   "fair_apr": [
+    8.4,
+    9.9
+   ],
+   "card": {
+    "lines": [
+     "Fair for your profile: 8.4% - 9.9%",
+     "EMI ceiling: Rs.39,500/month. Do not cross it.",
+     "Why: score 750+ -1%; stable job -0.5%.",
+     "No offer entered: show this card before accepting any quote.",
+     "Warning: Surplus Rs.-22,494 below zero after new EMI. [Don't borrow]"
+    ]
+   },
+   "why": {
+    "o2": "Use Rs.1,896,000 because bank sees Rs.1,930,000 but safe is Rs.1,896,000.",
+    "o3": "Fair 8.4-9.9% because score 750+ -1%; stable job -0.5%.",
+    "o4": "Ceiling Rs.39,500 because income x FOIR minus old EMI; stress fails."
+   }
+  }
+ },
+ {
+  "id": "S3-arjun-clinic-lap",
+  "who": "Arjun, 40, Pune, private clinic 12yr, residential flat 80L loan-free, ITR 12L/yr.",
+  "blanks": "Offer skipped.",
+  "answers": {
+   "purpose": "business",
+   "product": "lap",
+   "wanted": 2500000,
+   "income_type": "b",
+   "income_self": 120000,
+   "co_income": 0,
+   "co_active": false,
+   "itr_annual": 1200000,
+   "old_emi": 15000,
+   "bounce": "no",
+   "expenses": 55000,
+   "age": 40,
+   "score": "700-750",
+   "buffer": "3+",
+   "biz_vintage": "10yr+",
+   "collateral_value": 8000000,
+   "collateral_free": true,
+   "collateral_type": "residential",
+   "biz_extra_income": 40000,
+   "branch_answers": {
+    "A-B1": "10yr+",
+    "A-B2": "12L",
+    "A-B3": "80L"
+   }
+  },
+  "outputs": {
+   "income": {
+    "income_safe": 120000.0,
+    "income_lender": 100000.0,
+    "co_counts_safe": false
+   },
+   "months": 240,
+   "std_months": 240,
+   "foir_cap": 0.45,
+   "ceiling": 39000.0,
+   "rate": {
+    "low": 9.5,
+    "high": 11.0,
+    "mid": 10.25,
+    "base": [
+     9.5,
+     11.5
+    ],
+    "adj": -5.0,
+    "notes": [
+     "score 700-750 -0.5%",
+     "business 10yr+ -0.5%",
+     "residential collateral -4%"
+    ],
+    "unknown": false
+   },
+   "amount": {
+    "lender": 3218000.0,
+    "safe": 3973000.0,
+    "use": 3218000.0,
+    "wanted": 2500000.0,
+    "borrow_less": false,
+    "lender_emi_cap": 30000.0,
+    "safe_emi_cap": 39000.0
+   },
+   "new_emi": 24541.08,
+   "surplus": 25458.92,
+   "expenses_used": 55000.0,
+   "estimated_exp": false,
+   "old_emi_unknown": false,
+   "age_given": true,
+   "foir_actual": 0.3295,
+   "stress_pass": true,
+   "extra": 40000.0,
+   "verdict": {
+    "verdict": "Borrow with conditions",
+    "reason": "Loan adds Rs.40,000/month which covers EMI Rs.24,541.",
+    "flip": "Borrow only the productive part, keep EMI under ceiling."
+   },
+   "confidence": {
+    "level": "High",
+    "unknowns": 0,
+    "o2_widen": 0.0,
+    "o3_widen": 0.0
+   },
+   "fair_apr": [
+    9.5,
+    11.0
+   ],
+   "card": {
+    "lines": [
+     "Fair for your profile: 9.5% - 11.0%",
+     "EMI ceiling: Rs.39,000/month. Do not cross it.",
+     "Why: score 700-750 -0.5%; business 10yr+ -0.5%; residential collateral -4%.",
+     "No offer entered: show this card before accepting any quote.",
+     "Warning: Loan adds Rs.40,000/month which covers EMI Rs.24,541. [Borrow with conditions]"
+    ]
+   },
+   "why": {
+    "o2": "Use Rs.3,218,000 because bank sees Rs.3,218,000 but safe is Rs.3,973,000.",
+    "o3": "Fair 9.5-11.0% because score 700-750 -0.5%; business 10yr+ -0.5%.",
+    "o4": "Ceiling Rs.39,000 because income x FOIR minus old EMI; stress passes."
+   }
+  }
+ },
+ {
+  "id": "S4-divya-freelancer",
+  "who": "Divya, 30, Mumbai freelancer, no collateral, unsecured business loan.",
+  "blanks": "Score unknown, offer skipped, no collateral details.",
+  "answers": {
+   "purpose": "business",
+   "product": "business",
+   "wanted": 500000,
+   "income_type": "b",
+   "income_self": 70000,
+   "old_emi": 5000,
+   "bounce": "no",
+   "expenses": 35000,
+   "age": 30,
+   "score": "unknown",
+   "buffer": "1-2",
+   "itr_annual": 600000,
+   "biz_vintage": "2-10yr",
+   "biz_extra_income": 10000,
+   "branch_answers": {
+    "A-B1": "2-10yr"
+   }
+  },
+  "outputs": {
+   "income": {
+    "income_safe": 70000.0,
+    "income_lender": 50000.0,
+    "co_counts_safe": false
+   },
+   "months": 60,
+   "std_months": 60,
+   "foir_cap": 0.45,
+   "ceiling": 26500.0,
+   "rate": {
+    "low": 14.5,
+    "high": 20.5,
+    "mid": 17.5,
+    "base": [
+     11.0,
+     24.0
+    ],
+    "adj": 0.0,
+    "notes": [
+     "unknown score: widen +2%, low confidence"
+    ],
+    "unknown": true
+   },
+   "amount": {
+    "lender": 805000.0,
+    "safe": 1055000.0,
+    "use": 805000.0,
+    "wanted": 500000.0,
+    "borrow_less": false,
+    "lender_emi_cap": 17500.0,
+    "safe_emi_cap": 26500.0
+   },
+   "new_emi": 12561.11,
+   "surplus": 17438.89,
+   "expenses_used": 35000.0,
+   "estimated_exp": false,
+   "old_emi_unknown": false,
+   "age_given": true,
+   "foir_actual": 0.2509,
+   "stress_pass": true,
+   "extra": 10000.0,
+   "verdict": {
+    "verdict": "Borrow with conditions",
+    "reason": "Loan is productive but extra income unproven or thin.",
+    "flip": "Confirm extra income covers 80%+ of EMI, else borrow less."
+   },
+   "confidence": {
+    "level": "Medium",
+    "unknowns": 2,
+    "o2_widen": 0.0,
+    "o3_widen": 0.0
+   },
+   "fair_apr": [
+    14.5,
+    20.5
+   ],
+   "card": {
+    "lines": [
+     "Fair for your profile: 14.5% - 20.5%",
+     "EMI ceiling: Rs.26,500/month. Do not cross it.",
+     "Why: unknown score: widen +2%, low confidence.",
+     "No offer entered: show this card before accepting any quote.",
+     "Warning: Loan is productive but extra income unproven or thin. [Borrow with conditions]"
+    ]
+   },
+   "why": {
+    "o2": "Use Rs.805,000 because bank sees Rs.805,000 but safe is Rs.1,055,000.",
+    "o3": "Fair 14.5-20.5% because unknown score: widen +2%, low confidence.",
+    "o4": "Ceiling Rs.26,500 because income x FOIR minus old EMI; stress passes."
+   }
+  }
+ },
+ {
+  "id": "S5-chotu-rider-productive",
+  "who": "Chotu, 28, Lucknow delivery rider, scooter loan with proven extra + brother backup.",
+  "blanks": "Score no_history, offer skipped.",
+  "answers": {
+   "purpose": "vehicle",
+   "product": "two_wheeler",
+   "wanted": 140000,
+   "income_type": "c",
+   "income_self": 30000,
+   "co_income": 0,
+   "co_active": false,
+   "old_emi": 2000,
+   "bounce": "no",
+   "expenses": 18000,
+   "age": 28,
+   "score": "no_history",
+   "buffer": "family",
+   "scooter_extra_income": 12000,
+   "branch_answers": {
+    "A-C2": "none",
+    "A-C4": "+12k"
+   }
+  },
+  "outputs": {
+   "income": {
+    "income_safe": 30000.0,
+    "income_lender": 30000.0,
+    "co_counts_safe": false
+   },
+   "months": 84,
+   "std_months": 60,
+   "foir_cap": 0.3,
+   "ceiling": 7000.0,
+   "rate": {
+    "low": 14.25,
+    "high": 20.25,
+    "mid": 17.25,
+    "base": [
+     10.5,
+     24.0
+    ],
+    "adj": 0.0,
+    "notes": [
+     "unknown score: widen +2%, low confidence"
+    ],
+    "unknown": true
+   },
+   "amount": {
+    "lender": 415000.0,
+    "safe": 340000.0,
+    "use": 340000.0,
+    "wanted": 140000.0,
+    "borrow_less": false,
+    "lender_emi_cap": 7000.0,
+    "safe_emi_cap": 7000.0
+   },
+   "new_emi": 3498.21,
+   "surplus": 6501.79,
+   "expenses_used": 18000.0,
+   "estimated_exp": false,
+   "old_emi_unknown": false,
+   "age_given": true,
+   "foir_actual": 0.1833,
+   "stress_pass": true,
+   "extra": 12000.0,
+   "verdict": {
+    "verdict": "Borrow with conditions",
+    "reason": "Loan adds Rs.12,000/month which covers EMI Rs.3,498.",
+    "flip": "Borrow only the productive part, keep EMI under ceiling."
+   },
+   "confidence": {
+    "level": "Medium",
+    "unknowns": 1,
+    "o2_widen": 0.0,
+    "o3_widen": 0.0
+   },
+   "fair_apr": [
+    14.25,
+    20.25
+   ],
+   "card": {
+    "lines": [
+     "Fair for your profile: 14.25% - 20.25%",
+     "EMI ceiling: Rs.7,000/month. Do not cross it.",
+     "Why: unknown score: widen +2%, low confidence.",
+     "No offer entered: show this card before accepting any quote.",
+     "Warning: Loan adds Rs.12,000/month which covers EMI Rs.3,498. [Borrow with conditions]"
+    ]
+   },
+   "why": {
+    "o2": "Use Rs.340,000 because bank sees Rs.415,000 but safe is Rs.340,000.",
+    "o3": "Fair 14.25-20.25% because unknown score: widen +2%, low confidence.",
+    "o4": "Ceiling Rs.7,000 because income x FOIR minus old EMI; stress passes."
+   }
+  }
+ },
+ {
+  "id": "S6-farah-homemaker-gold",
+  "who": "Farah, 50, Hyderabad homemaker, no self income, husband 25k active, gold ornaments, wants 2L gold loan.",
+  "blanks": "Score unknown, offer skipped.",
+  "answers": {
+   "purpose": "other",
+   "product": "gold",
+   "wanted": 200000,
+   "income_type": "c",
+   "income_self": 0,
+   "co_income": 25000,
+   "co_active": true,
+   "co_changed": "no",
+   "old_emi": 0,
+   "bounce": "no",
+   "expenses": 20000,
+   "age": 50,
+   "score": "unknown",
+   "buffer": "1-2",
+   "branch_answers": {}
+  },
+  "outputs": {
+   "income": {
+    "income_safe": 25000.0,
+    "income_lender": 12500.0,
+    "co_counts_safe": true
+   },
+   "months": 36,
+   "std_months": 36,
+   "foir_cap": 0.3,
+   "ceiling": 7500.0,
+   "rate": {
+    "low": 9.0,
+    "high": 13.0,
+    "mid": 11.0,
+    "base": [
+     9.0,
+     12.0
+    ],
+    "adj": 0.0,
+    "notes": [
+     "unknown score: widen +2%, low confidence"
+    ],
+    "unknown": true
+   },
+   "amount": {
+    "lender": 118000.0,
+    "safe": 229000.0,
+    "use": 118000.0,
+    "wanted": 200000.0,
+    "borrow_less": false,
+    "lender_emi_cap": 3750.0,
+    "safe_emi_cap": 7500.0
+   },
+   "new_emi": 6547.74,
+   "surplus": -1547.74,
+   "expenses_used": 20000.0,
+   "estimated_exp": false,
+   "old_emi_unknown": false,
+   "age_given": true,
+   "foir_actual": 0.2619,
+   "stress_pass": false,
+   "extra": 0.0,
+   "verdict": {
+    "verdict": "Don't borrow",
+    "reason": "Surplus Rs.-1,548 below zero after new EMI.",
+    "flip": "Lower amount or longer tenure until surplus stays above zero."
+   },
+   "confidence": {
+    "level": "Low",
+    "unknowns": 3,
+    "o2_widen": 0.2,
+    "o3_widen": 2.0
+   },
+   "fair_apr": [
+    9.0,
+    13.0
+   ],
+   "card": {
+    "lines": [
+     "Fair for your profile: 9.0% - 13.0%",
+     "EMI ceiling: Rs.7,500/month. Do not cross it.",
+     "Why: unknown score: widen +2%, low confidence.",
+     "No offer entered: show this card before accepting any quote.",
+     "Warning: Surplus Rs.-1,548 below zero after new EMI. [Don't borrow]"
+    ]
+   },
+   "why": {
+    "o2": "Use Rs.118,000 because bank sees Rs.118,000 but safe is Rs.229,000.",
+    "o3": "Fair 9.0-13.0% because unknown score: widen +2%, low confidence.",
+    "o4": "Ceiling Rs.7,500 because income x FOIR minus old EMI; stress fails."
+   }
+  }
+ },
+ {
+  "id": "S7-vikram-forgetful",
+  "who": "Vikram, 36, Delhi salaried, does not remember bounce, score unknown, wants car 8L.",
+  "blanks": "Bounce unknown, score unknown, offer skipped.",
+  "answers": {
+   "purpose": "vehicle",
+   "product": "car",
+   "wanted": 800000,
+   "income_type": "a",
+   "income_self": 95000,
+   "co_income": 0,
+   "co_active": false,
+   "old_emi": 8000,
+   "bounce": "unknown",
+   "expenses": 45000,
+   "age": 36,
+   "score": "unknown",
+   "buffer": "1-2",
+   "job_vintage": "1-3yr",
+   "employer": "large",
+   "card_util": "30-70%",
+   "branch_answers": {
+    "A-S1": "1-3yr"
+   }
+  },
+  "outputs": {
+   "income": {
+    "income_safe": 95000.0,
+    "income_lender": 95000.0,
+    "co_counts_safe": false
+   },
+   "months": 60,
+   "std_months": 60,
+   "foir_cap": 0.55,
+   "ceiling": 44250.0,
+   "rate": {
+    "low": 9.5,
+    "high": 13.0,
+    "mid": 11.25,
+    "base": [
+     9.5,
+     11.5
+    ],
+    "adj": 0.5,
+    "notes": [
+     "stable job -0.5%",
+     "bounce history unclear: assumed 1, confirm",
+     "1 bounce +1%",
+     "unknown score: widen +2%, low confidence"
+    ],
+    "unknown": true
+   },
+   "amount": {
+    "lender": 2083000.0,
+    "safe": 2024000.0,
+    "use": 2024000.0,
+    "wanted": 800000.0,
+    "borrow_less": false,
+    "lender_emi_cap": 44250.0,
+    "safe_emi_cap": 44250.0
+   },
+   "new_emi": 17493.85,
+   "surplus": 24506.15,
+   "expenses_used": 45000.0,
+   "estimated_exp": false,
+   "old_emi_unknown": false,
+   "age_given": true,
+   "foir_actual": 0.2684,
+   "stress_pass": true,
+   "extra": 0.0,
+   "verdict": {
+    "verdict": "Borrow",
+    "reason": "Surplus positive, within FOIR cap, passes stress.",
+    "flip": "Stay under EMI ceiling."
+   },
+   "confidence": {
+    "level": "Medium",
+    "unknowns": 2,
+    "o2_widen": 0.0,
+    "o3_widen": 0.0
+   },
+   "fair_apr": [
+    9.5,
+    13.0
+   ],
+   "card": {
+    "lines": [
+     "Fair for your profile: 9.5% - 13.0%",
+     "EMI ceiling: Rs.44,250/month. Do not cross it.",
+     "Why: stable job -0.5%; bounce history unclear: assumed 1, confirm; 1 bounce +1%.",
+     "No offer entered: show this card before accepting any quote.",
+     "Warning: Surplus positive, within FOIR cap, passes stress. [Borrow]"
+    ]
+   },
+   "why": {
+    "o2": "Use Rs.2,024,000 because bank sees Rs.2,083,000 but safe is Rs.2,024,000.",
+    "o3": "Fair 9.5-13.0% because stable job -0.5%; bounce history unclear: assumed 1, confirm.",
+    "o4": "Ceiling Rs.44,250 because income x FOIR minus old EMI; stress passes."
+   }
+  }
+ },
+ {
+  "id": "S8-joseph-age-cap",
+  "who": "Joseph, 60, Kochi self-employed trader, age-cap tenure test, wants business 8L.",
+  "blanks": "Offer skipped.",
+  "answers": {
+   "purpose": "business",
+   "product": "business",
+   "wanted": 800000,
+   "income_type": "b",
+   "income_self": 80000,
+   "old_emi": 5000,
+   "bounce": "no",
+   "expenses": 35000,
+   "age": 60,
+   "score": "700-750",
+   "buffer": "1-2",
+   "itr_annual": 720000,
+   "biz_vintage": "10yr+",
+   "biz_extra_income": 12000,
+   "branch_answers": {
+    "A-B1": "10yr+"
+   }
+  },
+  "outputs": {
+   "income": {
+    "income_safe": 80000.0,
+    "income_lender": 60000.0,
+    "co_counts_safe": false
+   },
+   "months": 60,
+   "std_months": 60,
+   "foir_cap": 0.45,
+   "ceiling": 31000.0,
+   "rate": {
+    "low": 15.5,
+    "high": 17.5,
+    "mid": 16.5,
+    "base": [
+     11.0,
+     24.0
+    ],
+    "adj": -1.0,
+    "notes": [
+     "score 700-750 -0.5%",
+     "business 10yr+ -0.5%"
+    ],
+    "unknown": false
+   },
+   "amount": {
+    "lender": 1012000.0,
+    "safe": 1261000.0,
+    "use": 1012000.0,
+    "wanted": 800000.0,
+    "borrow_less": false,
+    "lender_emi_cap": 22000.0,
+    "safe_emi_cap": 31000.0
+   },
+   "new_emi": 19667.62,
+   "surplus": 20332.38,
+   "expenses_used": 35000.0,
+   "estimated_exp": false,
+   "old_emi_unknown": false,
+   "age_given": true,
+   "foir_actual": 0.3083,
+   "stress_pass": true,
+   "extra": 12000.0,
+   "verdict": {
+    "verdict": "Borrow with conditions",
+    "reason": "Loan is productive but extra income unproven or thin.",
+    "flip": "Confirm extra income covers 80%+ of EMI, else borrow less."
+   },
+   "confidence": {
+    "level": "Medium",
+    "unknowns": 1,
+    "o2_widen": 0.0,
+    "o3_widen": 0.0
+   },
+   "fair_apr": [
+    15.5,
+    17.5
+   ],
+   "card": {
+    "lines": [
+     "Fair for your profile: 15.5% - 17.5%",
+     "EMI ceiling: Rs.31,000/month. Do not cross it.",
+     "Why: score 700-750 -0.5%; business 10yr+ -0.5%.",
+     "No offer entered: show this card before accepting any quote.",
+     "Warning: Loan is productive but extra income unproven or thin. [Borrow with conditions]"
+    ]
+   },
+   "why": {
+    "o2": "Use Rs.1,012,000 because bank sees Rs.1,012,000 but safe is Rs.1,261,000.",
+    "o3": "Fair 15.5-17.5% because score 700-750 -0.5%; business 10yr+ -0.5%.",
+    "o4": "Ceiling Rs.31,000 because income x FOIR minus old EMI; stress passes."
+   }
+  }
+ }
+]
