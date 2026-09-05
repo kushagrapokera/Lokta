@@ -26,7 +26,7 @@ Blanks: S1 skipped.
  "purpose": "personal",
  "product": "personal",
  "wanted": 300000,
- "income_type": "a",
+ "income_type": "salaried",
  "income_self": 45000,
  "co_income": 0,
  "co_active": false,
@@ -40,8 +40,8 @@ Blanks: S1 skipped.
  "employer": "startup",
  "card_util": ">70%",
  "branch_answers": {
-  "A-S1": "<1yr",
-  "A-S3": ">70%"
+  "job_stability": "<1yr",
+  "card_usage": ">70%"
  }
 }
 ```
@@ -72,7 +72,7 @@ Blanks: S1 skipped.
  "purpose": "home",
  "product": "home",
  "wanted": 3000000,
- "income_type": "a",
+ "income_type": "salaried",
  "income_self": 90000,
  "co_income": 0,
  "co_active": false,
@@ -86,7 +86,7 @@ Blanks: S1 skipped.
  "employer": "govt",
  "card_util": "<30%",
  "branch_answers": {
-  "A-S1": "5yr+"
+  "job_stability": "5yr+"
  }
 }
 ```
@@ -117,7 +117,7 @@ Blanks: Offer skipped.
  "purpose": "business",
  "product": "lap",
  "wanted": 2500000,
- "income_type": "b",
+ "income_type": "self_employed",
  "income_self": 120000,
  "co_income": 0,
  "co_active": false,
@@ -134,9 +134,9 @@ Blanks: Offer skipped.
  "collateral_type": "residential",
  "biz_extra_income": 40000,
  "branch_answers": {
-  "A-B1": "10yr+",
-  "A-B2": "12L",
-  "A-B3": "80L"
+  "business_age": "10yr+",
+  "yearly_itr": "12L",
+  "property_collateral": "80L"
  }
 }
 ```
@@ -167,7 +167,7 @@ Blanks: Score unknown, offer skipped, no collateral details.
  "purpose": "business",
  "product": "business",
  "wanted": 500000,
- "income_type": "b",
+ "income_type": "self_employed",
  "income_self": 70000,
  "old_emi": 5000,
  "bounce": "no",
@@ -179,7 +179,7 @@ Blanks: Score unknown, offer skipped, no collateral details.
  "biz_vintage": "2-10yr",
  "biz_extra_income": 10000,
  "branch_answers": {
-  "A-B1": "2-10yr"
+  "business_age": "2-10yr"
  }
 }
 ```
@@ -210,7 +210,7 @@ Blanks: Score no_history, offer skipped.
  "purpose": "vehicle",
  "product": "two_wheeler",
  "wanted": 140000,
- "income_type": "c",
+ "income_type": "informal",
  "income_self": 30000,
  "co_income": 0,
  "co_active": false,
@@ -222,8 +222,8 @@ Blanks: Score no_history, offer skipped.
  "buffer": "family",
  "scooter_extra_income": 12000,
  "branch_answers": {
-  "A-C2": "none",
-  "A-C4": "+12k"
+  "family_dependents": "none",
+  "vehicle_extra_income": "+12k"
  }
 }
 ```
@@ -254,7 +254,7 @@ Blanks: Score unknown, offer skipped.
  "purpose": "other",
  "product": "gold",
  "wanted": 200000,
- "income_type": "c",
+ "income_type": "informal",
  "income_self": 0,
  "co_income": 25000,
  "co_active": true,
@@ -295,7 +295,7 @@ Blanks: Bounce unknown, score unknown, offer skipped.
  "purpose": "vehicle",
  "product": "car",
  "wanted": 800000,
- "income_type": "a",
+ "income_type": "salaried",
  "income_self": 95000,
  "co_income": 0,
  "co_active": false,
@@ -309,7 +309,7 @@ Blanks: Bounce unknown, score unknown, offer skipped.
  "employer": "large",
  "card_util": "30-70%",
  "branch_answers": {
-  "A-S1": "1-3yr"
+  "job_stability": "1-3yr"
  }
 }
 ```
@@ -340,7 +340,7 @@ Blanks: Offer skipped.
  "purpose": "business",
  "product": "business",
  "wanted": 800000,
- "income_type": "b",
+ "income_type": "self_employed",
  "income_self": 80000,
  "old_emi": 5000,
  "bounce": "no",
@@ -352,7 +352,7 @@ Blanks: Offer skipped.
  "biz_vintage": "10yr+",
  "biz_extra_income": 12000,
  "branch_answers": {
-  "A-B1": "10yr+"
+  "business_age": "10yr+"
  }
 }
 ```

@@ -7,7 +7,7 @@
    "purpose": "personal",
    "product": "personal",
    "wanted": 300000,
-   "income_type": "a",
+   "income_type": "salaried",
    "income_self": 45000,
    "co_income": 0,
    "co_active": false,
@@ -21,8 +21,8 @@
    "employer": "startup",
    "card_util": ">70%",
    "branch_answers": {
-    "A-S1": "<1yr",
-    "A-S3": ">70%"
+    "job_stability": "<1yr",
+    "card_usage": ">70%"
    }
   },
   "outputs": {
@@ -56,9 +56,7 @@
     "safe": 1040000.0,
     "use": 1040000.0,
     "wanted": 300000.0,
-    "borrow_less": false,
-    "lender_emi_cap": 24750.0,
-    "safe_emi_cap": 24750.0
+    "borrow_less": false
    },
    "new_emi": 7136.98,
    "surplus": 15863.02,
@@ -68,7 +66,6 @@
    "age_given": true,
    "foir_actual": 0.1586,
    "stress_pass": true,
-   "extra": 0.0,
    "verdict": {
     "verdict": "Borrow",
     "reason": "Surplus positive, within FOIR cap, passes stress.",
@@ -76,9 +73,7 @@
    },
    "confidence": {
     "level": "High",
-    "unknowns": 0,
-    "o2_widen": 0.0,
-    "o3_widen": 0.0
+    "unknowns": 0
    },
    "fair_apr": [
     13.5,
@@ -108,7 +103,7 @@
    "purpose": "home",
    "product": "home",
    "wanted": 3000000,
-   "income_type": "a",
+   "income_type": "salaried",
    "income_self": 90000,
    "co_income": 0,
    "co_active": false,
@@ -122,7 +117,7 @@
    "employer": "govt",
    "card_util": "<30%",
    "branch_answers": {
-    "A-S1": "5yr+"
+    "job_stability": "5yr+"
    }
   },
   "outputs": {
@@ -155,9 +150,7 @@
     "safe": 1896000.0,
     "use": 1896000.0,
     "wanted": 3000000.0,
-    "borrow_less": true,
-    "lender_emi_cap": 39500.0,
-    "safe_emi_cap": 39500.0
+    "borrow_less": true
    },
    "new_emi": 62493.69,
    "surplus": -22493.69,
@@ -167,7 +160,6 @@
    "age_given": true,
    "foir_actual": 0.8055,
    "stress_pass": false,
-   "extra": 0.0,
    "verdict": {
     "verdict": "Don't borrow",
     "reason": "Surplus Rs.-22,494 below zero after new EMI.",
@@ -175,9 +167,7 @@
    },
    "confidence": {
     "level": "High",
-    "unknowns": 0,
-    "o2_widen": 0.0,
-    "o3_widen": 0.0
+    "unknowns": 0
    },
    "fair_apr": [
     8.4,
@@ -207,7 +197,7 @@
    "purpose": "business",
    "product": "lap",
    "wanted": 2500000,
-   "income_type": "b",
+   "income_type": "self_employed",
    "income_self": 120000,
    "co_income": 0,
    "co_active": false,
@@ -224,9 +214,9 @@
    "collateral_type": "residential",
    "biz_extra_income": 40000,
    "branch_answers": {
-    "A-B1": "10yr+",
-    "A-B2": "12L",
-    "A-B3": "80L"
+    "business_age": "10yr+",
+    "yearly_itr": "12L",
+    "property_collateral": "80L"
    }
   },
   "outputs": {
@@ -260,9 +250,7 @@
     "safe": 3973000.0,
     "use": 3218000.0,
     "wanted": 2500000.0,
-    "borrow_less": false,
-    "lender_emi_cap": 30000.0,
-    "safe_emi_cap": 39000.0
+    "borrow_less": false
    },
    "new_emi": 24541.08,
    "surplus": 25458.92,
@@ -272,7 +260,6 @@
    "age_given": true,
    "foir_actual": 0.3295,
    "stress_pass": true,
-   "extra": 40000.0,
    "verdict": {
     "verdict": "Borrow with conditions",
     "reason": "Loan adds Rs.40,000/month which covers EMI Rs.24,541.",
@@ -280,9 +267,7 @@
    },
    "confidence": {
     "level": "High",
-    "unknowns": 0,
-    "o2_widen": 0.0,
-    "o3_widen": 0.0
+    "unknowns": 0
    },
    "fair_apr": [
     9.5,
@@ -312,7 +297,7 @@
    "purpose": "business",
    "product": "business",
    "wanted": 500000,
-   "income_type": "b",
+   "income_type": "self_employed",
    "income_self": 70000,
    "old_emi": 5000,
    "bounce": "no",
@@ -324,7 +309,7 @@
    "biz_vintage": "2-10yr",
    "biz_extra_income": 10000,
    "branch_answers": {
-    "A-B1": "2-10yr"
+    "business_age": "2-10yr"
    }
   },
   "outputs": {
@@ -356,9 +341,7 @@
     "safe": 1055000.0,
     "use": 805000.0,
     "wanted": 500000.0,
-    "borrow_less": false,
-    "lender_emi_cap": 17500.0,
-    "safe_emi_cap": 26500.0
+    "borrow_less": false
    },
    "new_emi": 12561.11,
    "surplus": 17438.89,
@@ -368,7 +351,6 @@
    "age_given": true,
    "foir_actual": 0.2509,
    "stress_pass": true,
-   "extra": 10000.0,
    "verdict": {
     "verdict": "Borrow with conditions",
     "reason": "Loan is productive but extra income unproven or thin.",
@@ -376,9 +358,7 @@
    },
    "confidence": {
     "level": "Medium",
-    "unknowns": 2,
-    "o2_widen": 0.0,
-    "o3_widen": 0.0
+    "unknowns": 2
    },
    "fair_apr": [
     14.5,
@@ -408,7 +388,7 @@
    "purpose": "vehicle",
    "product": "two_wheeler",
    "wanted": 140000,
-   "income_type": "c",
+   "income_type": "informal",
    "income_self": 30000,
    "co_income": 0,
    "co_active": false,
@@ -420,8 +400,8 @@
    "buffer": "family",
    "scooter_extra_income": 12000,
    "branch_answers": {
-    "A-C2": "none",
-    "A-C4": "+12k"
+    "family_dependents": "none",
+    "vehicle_extra_income": "+12k"
    }
   },
   "outputs": {
@@ -453,9 +433,7 @@
     "safe": 340000.0,
     "use": 340000.0,
     "wanted": 140000.0,
-    "borrow_less": false,
-    "lender_emi_cap": 7000.0,
-    "safe_emi_cap": 7000.0
+    "borrow_less": false
    },
    "new_emi": 3498.21,
    "surplus": 6501.79,
@@ -465,7 +443,6 @@
    "age_given": true,
    "foir_actual": 0.1833,
    "stress_pass": true,
-   "extra": 12000.0,
    "verdict": {
     "verdict": "Borrow with conditions",
     "reason": "Loan adds Rs.12,000/month which covers EMI Rs.3,498.",
@@ -473,9 +450,7 @@
    },
    "confidence": {
     "level": "Medium",
-    "unknowns": 1,
-    "o2_widen": 0.0,
-    "o3_widen": 0.0
+    "unknowns": 1
    },
    "fair_apr": [
     14.25,
@@ -505,7 +480,7 @@
    "purpose": "other",
    "product": "gold",
    "wanted": 200000,
-   "income_type": "c",
+   "income_type": "informal",
    "income_self": 0,
    "co_income": 25000,
    "co_active": true,
@@ -547,9 +522,7 @@
     "safe": 229000.0,
     "use": 118000.0,
     "wanted": 200000.0,
-    "borrow_less": false,
-    "lender_emi_cap": 3750.0,
-    "safe_emi_cap": 7500.0
+    "borrow_less": false
    },
    "new_emi": 6547.74,
    "surplus": -1547.74,
@@ -559,7 +532,6 @@
    "age_given": true,
    "foir_actual": 0.2619,
    "stress_pass": false,
-   "extra": 0.0,
    "verdict": {
     "verdict": "Don't borrow",
     "reason": "Surplus Rs.-1,548 below zero after new EMI.",
@@ -567,9 +539,7 @@
    },
    "confidence": {
     "level": "Low",
-    "unknowns": 3,
-    "o2_widen": 0.2,
-    "o3_widen": 2.0
+    "unknowns": 3
    },
    "fair_apr": [
     9.0,
@@ -599,7 +569,7 @@
    "purpose": "vehicle",
    "product": "car",
    "wanted": 800000,
-   "income_type": "a",
+   "income_type": "salaried",
    "income_self": 95000,
    "co_income": 0,
    "co_active": false,
@@ -613,7 +583,7 @@
    "employer": "large",
    "card_util": "30-70%",
    "branch_answers": {
-    "A-S1": "1-3yr"
+    "job_stability": "1-3yr"
    }
   },
   "outputs": {
@@ -648,9 +618,7 @@
     "safe": 2024000.0,
     "use": 2024000.0,
     "wanted": 800000.0,
-    "borrow_less": false,
-    "lender_emi_cap": 44250.0,
-    "safe_emi_cap": 44250.0
+    "borrow_less": false
    },
    "new_emi": 17493.85,
    "surplus": 24506.15,
@@ -660,7 +628,6 @@
    "age_given": true,
    "foir_actual": 0.2684,
    "stress_pass": true,
-   "extra": 0.0,
    "verdict": {
     "verdict": "Borrow",
     "reason": "Surplus positive, within FOIR cap, passes stress.",
@@ -668,9 +635,7 @@
    },
    "confidence": {
     "level": "Medium",
-    "unknowns": 2,
-    "o2_widen": 0.0,
-    "o3_widen": 0.0
+    "unknowns": 2
    },
    "fair_apr": [
     9.5,
@@ -700,7 +665,7 @@
    "purpose": "business",
    "product": "business",
    "wanted": 800000,
-   "income_type": "b",
+   "income_type": "self_employed",
    "income_self": 80000,
    "old_emi": 5000,
    "bounce": "no",
@@ -712,7 +677,7 @@
    "biz_vintage": "10yr+",
    "biz_extra_income": 12000,
    "branch_answers": {
-    "A-B1": "10yr+"
+    "business_age": "10yr+"
    }
   },
   "outputs": {
@@ -745,9 +710,7 @@
     "safe": 1261000.0,
     "use": 1012000.0,
     "wanted": 800000.0,
-    "borrow_less": false,
-    "lender_emi_cap": 22000.0,
-    "safe_emi_cap": 31000.0
+    "borrow_less": false
    },
    "new_emi": 19667.62,
    "surplus": 20332.38,
@@ -757,7 +720,6 @@
    "age_given": true,
    "foir_actual": 0.3083,
    "stress_pass": true,
-   "extra": 12000.0,
    "verdict": {
     "verdict": "Borrow with conditions",
     "reason": "Loan is productive but extra income unproven or thin.",
@@ -765,9 +727,7 @@
    },
    "confidence": {
     "level": "Medium",
-    "unknowns": 1,
-    "o2_widen": 0.0,
-    "o3_widen": 0.0
+    "unknowns": 1
    },
    "fair_apr": [
     15.5,
