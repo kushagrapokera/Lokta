@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<p class="small">{{ for_line }}</p>
+<h2>Verdict: {{ o.verdict.verdict }}</h2>
+<p>{{ o.verdict.reason }}</p>
+<p class="small">Flip: {{ o.verdict.flip }}</p>
+<div class="metrics">
+<div class="metric"><div class="k">Bank may sanction</div><div class="v">Rs.{{ o.amount.lender }}</div></div>
+<div class="metric"><div class="k">Safe for you</div><div class="v">Rs.{{ o.amount.use }}</div></div>
+<div class="metric"><div class="k">EMI ceiling</div><div class="v">Rs.{{ o.ceiling }}</div></div>
+</div>
+<p>Fair rate: {{ o.rate.low }}% - {{ o.rate.high }}% (APR {{ o.fair_apr[0] }}% - {{ o.fair_apr[1] }}%).</p>
+<p>Your EMI for wanted Rs.{{ o.amount.wanted }}: Rs.{{ o.new_emi }} over {{ o.std_months }} months. Stress: {{ "passes" if o.stress_pass else "fails" }}.</p>
+<p class="small">{{ o.why.amount_reason }} {{ o.why.rate_reason }} {{ o.why.ceiling_reason }}</p>
+<h3>Negotiation Card</h3>
+<ul class="card">{% for line in o.card.lines %}<li>{{ line }}</li>{% endfor %}</ul>
+<p class="small">Confidence: {{ o.confidence.level }}. Ranges are ranges; fewer answers = wider band.</p>
+<form method="post" action="{{ url_for('restart') }}"><button class="primary">Restart</button></form>
+{% endblock %}

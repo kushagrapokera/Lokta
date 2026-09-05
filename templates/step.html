@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bar"><div style="width:{{ pct }}%"></div></div>
+<p class="step">Step {{ idx }} of {{ total }}</p>
+<h2>{{ title }}</h2>
+{% if error %}<div class="err">{{ error }}</div>{% endif %}
+{% if note %}<div class="note">{{ note }}</div>{% endif %}
+
+{% if confirm == "expenses" %}
+<form method="post">
+<p>We assumed Rs.{{ pending }} monthly spending. Correct?</p>
+<div class="nav">
+<button class="primary" name="action" value="confirm_yes">Yes, continue</button>
+<button class="ghost" name="action" value="confirm_edit">Edit</button>
+<button class="ghost" name="action" value="back">Back</button>
+</div>
+</form>
+
+{% elif confirm == "score" %}
+<form method="post">
+<p>We read this as: {{ pending_label }}. Correct?</p>
+<div class="nav">
+<button class="primary" name="action" value="confirm_yes">Yes, continue</button>
+<button class="ghost" name="action" value="confirm_edit">Edit</button>
+<button class="ghost" name="action" value="back">Back</button>
+</div>
+</form>
+
+{% else %}
+<form method="post">
+{% if sid == "loan_purpose" %}
+<label class="field">Purpose</label>
+<div class="chips">
+{% for p in purposes %}
+<label><input type="radio" name="purpose" value="{{ p }}" {% if p==cur_purpose %}checked{% endif %}><span>{{ p }}</span></label>
+{% endfor %}
+</div>
+<label class="field">Which one fits best?</label>
+{% for p, opts in sub_options.items() %}
+<div class="group" data-group="{{ p }}">
+<h4>{{ p }}</h4>
+<div class="chips">
+{% for c, l, pr in opts %}
+<label><input type="radio" name="sub_code" value="{{ c }}" {% if c==cur_sub %}checked{% endif %} data-first="{% if loop.first %}1{% endif %}"><span>{{ l }}</span></label>
+{% endfor %}
+</div>
+</div>
+{% endfor %}
+<label class="field">Or describe (only if Purpose = Other)</label>
+<input name="other_text" value="{{ other_text }}" placeholder="Describe in your words">
+<script>
+var pRadios = document.querySelectorAll('input[name=purpose]');
+function visibleGroup(){
+  var p = document.querySelector('input[name=purpose]:checked');
+  return p ? p.value : '';
+}
+function filt(){
+  var v = visibleGroup();
+  document.querySelectorAll('[data-group]').forEach(function(g){
+    g.style.display = (v === 'Other' || g.getAttribute('data-group') === v) ? '' : 'none';
+  });
+  var checkedSub = document.querySelector('input[name=sub_code]:checked');
+  var visible = document.querySelector('[data-group="' + v + '"] input[name=sub_code]');
+  if (v !== 'Other' && (!checkedSub || checkedSub.closest('[data-group]').getAttribute('data-group') !== v) && visible){
+    visible.checked = true;
+  }
+}
+pRadios.forEach(function(r){ r.addEventListener('change', filt); });
+filt();
+</script>
+
+{% elif sid == "loan_amount" %}
+<label class="field">Amount (Rs.)<input type="number" name="wanted" min="0" step="10000" value="{{ ans.get('wanted',0) }}"></label>
+
+{% elif sid == "work_type" %}
+<label class="field">Occupation<input name="job_label" value="{{ ans.get('job_label','') }}" placeholder="e.g. kirana store"></label>
+<label class="field">How do you get paid?</label>
+<div class="chips">
+<label><input type="radio" name="income_type" value="salaried" {% if ans.get('income_type','salaried')=='salaried' %}checked{% endif %}><span>Fixed salary in bank</span></label>
+<label><input type="radio" name="income_type" value="self_employed" {% if ans.get('income_type')=='self_employed' %}checked{% endif %}><span>Own shop/business, file ITR</span></label>
+<label><input type="radio" name="income_type" value="informal" {% if ans.get('income_type')=='informal' %}checked{% endif %}><span>Daily/weekly/gig cash</span></label>
+</div>
+
+{% elif sid == "monthly_income" %}
+{% if is_informal %}
+<label class="field">LOW month income<input type="number" name="income_self" min="0" step="1000" value="{{ ans.get('income_self',0) }}"></label>
+<label class="field">HIGH month income<input type="number" name="income_high" min="0" step="1000" value="{{ ans.get('income_high',0) }}"></label>
+{% else %}
+<label class="field">Yours<input type="number" name="income_self" min="0" step="1000" value="{{ ans.get('income_self',0) }}"></label>
+{% endif %}
+<label class="field">Does anyone else earn in family?</label>
+<div class="chips">
+<label><input type="radio" name="has_co" value="No" {% if not ans.get('co_active') %}checked{% endif %}><span>No</span></label>
+<label><input type="radio" name="has_co" value="Yes" {% if ans.get('co_active') %}checked{% endif %}><span>Yes</span></label>
+</div>
+<div id="co_fields" style="{% if not ans.get('co_active') %}display:none{% endif %}">
+<label class="field">Their monthly income<input type="number" name="co_income" min="0" step="1000" value="{{ ans.get('co_income',0) }}"></label>
+<label class="field">Is that income steady right now?</label>
+<div class="chips">
+<label><input type="radio" name="co_changed" value="no" {% if ans.get('co_changed','no')!='stopped' %}checked{% endif %}><span>Steady</span></label>
+<label><input type="radio" name="co_changed" value="stopped" {% if ans.get('co_changed')=='stopped' %}checked{% endif %}><span>Stopped</span></label>
+</div>
+</div>
+<script>
+document.querySelectorAll('input[name=has_co]').forEach(function(r){
+  r.addEventListener('change', function(){
+    document.getElementById('co_fields').style.display =
+      document.querySelector('input[name=has_co]:checked').value === 'Yes' ? '' : 'none';
+  });
+});
+</script>
+
+{% elif sid == "current_loans" %}
+<label class="field">Total EMI + app-loan + BNPL per month (Rs.)<input type="number" id="old_emi" name="old_emi" min="0" step="500" value="{{ ans.get('old_emi',0) }}"></label>
+<div id="bounce_fields">
+<label class="field">Any EMI bounced in last 12 months?</label>
+<div class="chips">
+<label><input type="radio" name="bounce" value="no" checked><span>no</span></label>
+<label><input type="radio" name="bounce" value="yes"><span>yes</span></label>
+<label><input type="radio" name="bounce" value="unknown"><span>unknown</span></label>
+</div>
+<div id="bounce_count_wrap" style="display:none">
+<label class="field">How many bounces?<input type="number" name="bounce_count" min="1" value="1"></label>
+</div>
+</div>
+<script>
+function refreshBounce(){
+  var v = parseFloat(document.getElementById('old_emi').value || '0');
+  document.getElementById('bounce_fields').style.display = v > 0 ? '' : 'none';
+  var b = document.querySelector('input[name=bounce]:checked');
+  document.getElementById('bounce_count_wrap').style.display = (b && b.value === 'yes' && v > 0) ? '' : 'none';
+}
+document.getElementById('old_emi').addEventListener('input', refreshBounce);
+document.querySelectorAll('input[name=bounce]').forEach(function(r){ r.addEventListener('change', refreshBounce); });
+refreshBounce();
+</script>
+
+{% elif sid == "monthly_expenses" %}
+<label class="field">Total household expenses per month incl rent (Rs.)<input type="number" name="expenses" min="0" step="1000" value="{{ ans.get('expenses',0) }}"></label>
+
+{% elif sid == "age" %}
+<label class="field">Your age?<input type="number" name="age" min="18" max="70" value="{{ ans.get('age',35) }}"></label>
+
+{% elif sid == "credit_score" %}
+<label class="field">Type your score<input name="score_raw" value="" placeholder="e.g. 780, or 'don't know'"></label>
+
+{% elif sid == "safety_backup" %}
+<label class="field">Backup</label>
+<div class="chips">
+<label><input type="radio" name="buffer" value="none" checked><span>No backup</span></label>
+<label><input type="radio" name="buffer" value="family"><span>Family/friend covers 1-2 EMIs</span></label>
+<label><input type="radio" name="buffer" value="1-2"><span>Savings 1-2 months</span></label>
+<label><input type="radio" name="buffer" value="3+"><span>Savings 3+ months</span></label>
+</div>
+
+{% elif sid == "existing_offer" %}
+<label class="field">Have you already got a loan offer?</label>
+<div class="chips">
+<label><input type="radio" name="has_offer" value="Skip" checked><span>Skip</span></label>
+<label><input type="radio" name="has_offer" value="Yes"><span>Yes</span></label>
+</div>
+<div id="offer_fields" style="display:none">
+<label class="field">Offer rate %<input type="number" name="offer_rate" step="0.1" value="14.0"></label>
+<label class="field">Processing fee %<input type="number" name="offer_fee" step="0.1" value="1.0"></label>
+<label class="field">Offer tenure (months)<input type="number" name="offer_tenure" min="6" value="{{ default_tenure }}"></label>
+</div>
+<script>
+document.querySelectorAll('input[name=has_offer]').forEach(function(r){
+  r.addEventListener('change', function(){
+    document.getElementById('offer_fields').style.display =
+      document.querySelector('input[name=has_offer]:checked').value === 'Yes' ? '' : 'none';
+  });
+});
+</script>
+
+{% elif sid == "job_stability" %}
+<label class="field">How long in your current job?</label>
+<div class="chips">
+<label><input type="radio" name="job_vintage" value="<1yr" checked><span>&lt;1yr</span></label>
+<label><input type="radio" name="job_vintage" value="1-3yr"><span>1-3yr</span></label>
+<label><input type="radio" name="job_vintage" value="5yr+"><span>5yr+</span></label>
+</div>
+<label class="field">Employer type?</label>
+<div class="chips">
+<label><input type="radio" name="employer" value="other" checked><span>Small company / Other</span></label>
+<label><input type="radio" name="employer" value="mnc"><span>MNC / Govt / Large co.</span></label>
+</div>
+
+{% elif sid == "card_usage" %}
+<label class="field">Card use</label>
+<div class="chips">
+<label><input type="radio" name="card_util" value="No card" checked><span>No card</span></label>
+<label><input type="radio" name="card_util" value="<30%"><span>&lt;30%</span></label>
+<label><input type="radio" name="card_util" value="30-70%"><span>30-70%</span></label>
+<label><input type="radio" name="card_util" value=">70%"><span>&gt;70%</span></label>
+</div>
+
+{% elif sid == "yearly_itr" %}
+<label class="field">ITR annual<input type="number" name="itr_annual" min="0" step="10000" value="0"></label>
+
+{% elif sid == "property_collateral" %}
+<label class="field">Its value in Rs. (0 if none)<input type="number" id="collateral_value" name="collateral_value" min="0" step="50000" value="0"></label>
+<div id="collateral_extra" style="display:none">
+<label class="field">Loan-free?</label>
+<div class="chips">
+<label><input type="radio" name="collateral_free" value="No" checked><span>No</span></label>
+<label><input type="radio" name="collateral_free" value="Yes"><span>Yes</span></label>
+</div>
+<label class="field">Property type?</label>
+<div class="chips">
+<label><input type="radio" name="collateral_type" value="residential" checked><span>residential</span></label>
+<label><input type="radio" name="collateral_type" value="commercial"><span>commercial</span></label>
+</div>
+</div>
+<script>
+document.getElementById('collateral_value').addEventListener('input', function(){
+  document.getElementById('collateral_extra').style.display =
+    parseFloat(this.value || '0') > 0 ? '' : 'none';
+});
+</script>
+
+{% elif sid == "business_age" %}
+<label class="field">Business vintage</label>
+<div class="chips">
+<label><input type="radio" name="biz_vintage" value="<2yr" checked><span>&lt;2yr</span></label>
+<label><input type="radio" name="biz_vintage" value="2-10yr"><span>2-10yr</span></label>
+<label><input type="radio" name="biz_vintage" value="10yr+"><span>10yr+</span></label>
+</div>
+
+{% elif sid == "business_extra_income" %}
+<label class="field">Extra per month (0 if none)<input type="number" name="biz_extra_income" min="0" step="1000" value="0"></label>
+
+{% elif sid == "vehicle_extra_income" %}
+<label class="field">Extra per month (0 if none)<input type="number" name="scooter_extra_income" min="0" step="500" value="0"></label>
+
+{% elif sid == "app_loans_detail" %}
+<label class="field">Outstanding (0 if none)<input type="number" id="app_outstanding" name="app_outstanding" min="0" step="1000" value="0"></label>
+<div id="app_rate_wrap" style="display:none">
+<label class="field">Rate %<input type="number" name="app_rate" step="0.1" value="0.0"></label>
+</div>
+<script>
+document.getElementById('app_outstanding').addEventListener('input', function(){
+  document.getElementById('app_rate_wrap').style.display =
+    parseFloat(this.value || '0') > 0 ? '' : 'none';
+});
+</script>
+{% endif %}
+
+<div class="nav">
+{% if show_back %}<button class="ghost" name="action" value="back">Back</button>{% endif %}
+{% if skippable %}<button class="ghost" name="action" value="skip">Skip</button>{% endif %}
+<button class="primary" name="action" value="next">Continue</button>
+</div>
+</form>
+{% endif %}
+{% endblock %}

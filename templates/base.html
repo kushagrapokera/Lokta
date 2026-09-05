@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Borrower Copilot</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#FBF9FA;color:#221A20;font-family:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif;font-size:17px;line-height:1.55}
+.wrap{max-width:46rem;margin:0 auto;padding:2rem 1.25rem 4rem}
+h1{font-size:2rem;margin:0 0 .25rem}
+.sub{color:#6E6069;margin:0 0 1.25rem}
+.bar{height:8px;background:#EFE3EA;border-radius:4px;margin:.75rem 0}
+.bar>div{height:8px;background:#4B2440;border-radius:4px;transition:width .2s}
+.step{font-size:.85rem;color:#6E6069}
+h2{font-size:1.4rem;margin:.5rem 0 .75rem}
+.err{background:#fde8e8;border:1px solid #c00;border-radius:6px;padding:.6rem .8rem;margin:.75rem 0}
+.note{background:#EFE3EA;border-left:3px solid #4B2440;padding:.6rem .8rem;margin:.75rem 0}
+label.field{display:block;margin:.8rem 0;font-weight:600}
+input[type=text],input[type=number],input:not([type]){font-size:1rem;padding:.45rem .6rem;width:100%;max-width:22rem;border:1px solid #C9BCC3;border-radius:6px;background:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:.4rem 0}
+.chips label{margin:0}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;padding:.45rem .9rem;border:1px solid #C9BCC3;border-radius:999px;background:#fff;cursor:pointer;font-weight:400}
+.chips input:checked+span{background:#4B2440;color:#FBF9FA;border-color:#4B2440}
+.chips input:focus-visible+span{outline:2px solid #4B2440;outline-offset:2px}
+.subhead{font-weight:600;margin:1rem 0 .25rem}
+.group{border:1px solid #E2D9DE;border-radius:8px;padding:.6rem .8rem;margin:.5rem 0;background:#fff}
+.group h4{margin:.1rem 0 .4rem;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:#6E6069}
+.nav{display:flex;gap:.5rem;margin-top:1.2rem}
+button{font-size:1rem;padding:.5rem 1.1rem;border-radius:6px;border:1px solid #4B2440;cursor:pointer}
+button.primary{background:#4B2440;color:#FBF9FA}
+button.ghost{background:#fff;color:#4B2440}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1rem 0}
+@media (max-width:600px){.metrics{grid-template-columns:1fr}}
+.metric{background:#F3EEF1;border:1px solid #E2D9DE;border-radius:8px;padding:.7rem .8rem}
+.metric .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:#6E6069}
+.metric .v{font-size:1.25rem;font-weight:600}
+.small{color:#6E6069;font-size:.9rem}
+ul.card{background:#fff;border:1px solid #E2D9DE;border-radius:8px;padding:.8rem 1.1rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Borrower Copilot</h1>
+<p class="sub">Self-check before you walk into a lender. No login, nothing stored.</p>
+{% block content %}{% endblock %}
+</div>
+</body>
+</html>
