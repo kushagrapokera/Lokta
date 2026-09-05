@@ -8,8 +8,8 @@ Requires conda env `lokta` with Python 3.11 (or any Python 3.10+).
 
 ```bash
 conda activate lokta
-pip install -r requirements.txt   # streamlit + pytest, one time
-streamlit run app.py              # opens http://localhost:8501
+pip install -r requirements.txt   # flask + pytest, one time
+python flask_app.py               # opens http://127.0.0.1:5000
 ```
 
 Offline after install. No backend, no API key.
@@ -23,9 +23,9 @@ python -m pytest tests/ -v   # 10 tests: structure + Priya/Ravi/Anita golden + e
 
 ## Structure
 
-- `app.py` — Streamlit flow only (M1–M9 → S1 → branch → results + card). No numbers here.
+- `flask_app.py` + `templates/` — Flask flow only (questions → branch → results + card). No numbers here.
 - `rules/config.py` — single source of truth, mirrors RULES.md. Only file to edit live.
-- `rules/` — one file per calculation: questions, income, emi, amount, fair_rate, apr, verdict, confidence, card, explain, engine.
+- `rules/` — one file per calculation: questions, flow, income, emi, amount, fair_rate, apr, verdict, confidence, card, explain, engine.
 - `QUESTIONS.md` — locked v1.1 question list. `THRESHOLDS_SEPT2026.md` — Sept 2026 bands + locked thresholds.
 - `RULES.md` — what/value/why/source table. `docs/RUNTHROUGHS.md` — 3 borrowers traced. `docs/WALKTHROUGH.md` — 5-min script.
 
