@@ -4,37 +4,102 @@ from rules import config
 from rules.engine import compute
 from rules.emi import max_tenure_months
 from rules.income import normalize_income
-from rules.questions import SUB_OPTIONS, branch_for, parse_score, product_for_sub
+from rules.questions import (
+    SUB_OPTIONS,
+    SALARIED,
+    SELF_EMPLOYED,
+    INFORMAL,
+    branch_for,
+    parse_score,
+    product_for_sub,
+)
 
-MUST = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "S1"]
+# --- Step names (readable screen IDs, in order) ---
+STEP_LOAN_PURPOSE = "loan_purpose"        # was M1: purpose + sub-purpose
+STEP_LOAN_AMOUNT = "loan_amount"          # was M2: how much wanted
+STEP_WORK_TYPE = "work_type"              # was M3: job label + salaried/self/informal
+STEP_MONTHLY_INCOME = "monthly_income"    # was M4: self + co-earner income
+STEP_CURRENT_LOANS = "current_loans"      # was M5: old EMI + bounce history
+STEP_MONTHLY_EXPENSES = "monthly_expenses"  # was M6: household expenses
+STEP_AGE = "age"                          # was M7
+STEP_CREDIT_SCORE = "credit_score"        # was M8
+STEP_SAFETY_BACKUP = "safety_backup"      # was M9: buffer if income stops
+STEP_EXISTING_OFFER = "existing_offer"    # was S1: loan offer to compare
+
+# Branch follow-ups (max 5, all skippable)
+STEP_JOB_STABILITY = "job_stability"              # was A-S1: vintage + employer
+STEP_CARD_USAGE = "card_usage"                    # was A-S3: credit-card utilisation
+STEP_YEARLY_ITR = "yearly_itr"                    # was A-B2: ITR per year
+STEP_PROPERTY_COLLATERAL = "property_collateral"  # was A-B3: shop/house value
+STEP_BUSINESS_AGE = "business_age"                # was A-B1: business vintage
+STEP_BUSINESS_EXTRA_INCOME = "business_extra_income"  # was A-B5
+STEP_VEHICLE_EXTRA_INCOME = "vehicle_extra_income"    # was A-C4
+STEP_APP_LOANS_DETAIL = "app_loans_detail"            # was A-C3
+STEP_RESULTS = "results"                      # was DONE
+
+MUST_STEPS = [
+    STEP_LOAN_PURPOSE,
+    STEP_LOAN_AMOUNT,
+    STEP_WORK_TYPE,
+    STEP_MONTHLY_INCOME,
+    STEP_CURRENT_LOANS,
+    STEP_MONTHLY_EXPENSES,
+    STEP_AGE,
+    STEP_CREDIT_SCORE,
+    STEP_SAFETY_BACKUP,
+    STEP_EXISTING_OFFER,
+]
 PURPOSES = list(SUB_OPTIONS.keys()) + ["Other"]
+
+# Old short codes ("M1", "A-B3", "a"/"b"/"c") still accepted where answers
+# come from outside, so old tests and saved data keep working.
+OLD_TO_NEW_STEP = {
+    "M1": STEP_LOAN_PURPOSE, "M2": STEP_LOAN_AMOUNT, "M3": STEP_WORK_TYPE,
+    "M4": STEP_MONTHLY_INCOME, "M5": STEP_CURRENT_LOANS, "M6": STEP_MONTHLY_EXPENSES,
+    "M7": STEP_AGE, "M8": STEP_CREDIT_SCORE, "M9": STEP_SAFETY_BACKUP,
+    "S1": STEP_EXISTING_OFFER, "A-S1": STEP_JOB_STABILITY, "A-S3": STEP_CARD_USAGE,
+    "A-B2": STEP_YEARLY_ITR, "A-B3": STEP_PROPERTY_COLLATERAL, "A-B1": STEP_BUSINESS_AGE,
+    "A-B5": STEP_BUSINESS_EXTRA_INCOME, "A-C4": STEP_VEHICLE_EXTRA_INCOME,
+    "A-C3": STEP_APP_LOANS_DETAIL, "DONE": STEP_RESULTS,
+}
 
 
 def _branch_steps(ans: dict) -> list:
-    b = branch_for(ans)
-    if b == "b":
-        steps = ["A-B2", "A-B3", "A-B1", "A-B5"]
-    elif b == "c":
-        steps = ["A-C4", "A-C3"]
+    """Extra questions based on work type. Accepts old or new step names."""
+    work_type = branch_for(ans)
+    if work_type == SELF_EMPLOYED:
+        steps = [STEP_YEARLY_ITR, STEP_PROPERTY_COLLATERAL, STEP_BUSINESS_AGE,
+                 STEP_BUSINESS_EXTRA_INCOME]
+    elif work_type == INFORMAL:
+        steps = [STEP_VEHICLE_EXTRA_INCOME, STEP_APP_LOANS_DETAIL]
     else:
-        steps = ["A-S1", "A-S3"]
+        steps = [STEP_JOB_STABILITY, STEP_CARD_USAGE]
     # Cross-branch injections: sub-purpose or size earns the question a place here.
-    if ans.get("sub_purpose") == "home_lap" and "A-B3" not in steps:
-        steps = steps + ["A-B3"]
-    if ans.get("sub_purpose") == "personal_consolidate" and "A-C3" not in steps:
-        steps = steps + ["A-C3"]
+    if ans.get("sub_purpose") == "home_lap" and STEP_PROPERTY_COLLATERAL not in steps:
+        steps = steps + [STEP_PROPERTY_COLLATERAL]
+    if ans.get("sub_purpose") == "personal_consolidate" and STEP_APP_LOANS_DETAIL not in steps:
+        steps = steps + [STEP_APP_LOANS_DETAIL]
     try:
         inc = normalize_income(ans).get("income_safe", 0) or 0
         if inc > 0 and float(ans.get("wanted", 0) or 0) > config.LAP_SUGGEST_INCOME_MULT * float(inc) \
-                and "A-B3" not in steps:
-            steps = steps + ["A-B3"]
+                and STEP_PROPERTY_COLLATERAL not in steps:
+            steps = steps + [STEP_PROPERTY_COLLATERAL]
     except (TypeError, ValueError):
         pass
+    # Backward compat: also accept old "A-B3"/"A-C3" callers in tests.
     return steps
 
 
+def _normalize_step(sid: str) -> str:
+    return OLD_TO_NEW_STEP.get(sid, sid)
+
+
 def _steps(ans: dict) -> list:
-    return MUST + _branch_steps(ans) + ["DONE"]
+    return MUST_STEPS + _branch_steps(ans) + [STEP_RESULTS]
+
+
+def _is_salaried(ans: dict) -> bool:
+    return branch_for(ans) == SALARIED
 
 
 def _nav(back=True, skip=False, nxt="Continue") -> str:
@@ -72,7 +137,7 @@ def main() -> None:
     steps = _steps(ans)
     s = min(st.session_state.step, len(steps) - 1)
     st.session_state.step = s
-    sid = steps[s]
+    sid = _normalize_step(steps[s])
 
     st.set_page_config(page_title="Borrower Copilot", layout="centered")
     st.title("Borrower Copilot")
@@ -80,7 +145,7 @@ def main() -> None:
     st.progress((s + 1) / len(steps))
     st.caption(f"Step {s + 1} of {len(steps)}")
 
-    if sid == "M1":
+    if sid == STEP_LOAN_PURPOSE:
         st.subheader("What do you need the loan for?")
         p = st.radio("Purpose", PURPOSES, horizontal=True)
         sub_code, sub_label = "", ""
@@ -103,7 +168,7 @@ def main() -> None:
             ans["product"] = product_for_sub(sub_code) if sub_code else "unknown"
             _go(nav)
 
-    elif sid == "M2":
+    elif sid == STEP_LOAN_AMOUNT:
         st.subheader("How much do you want? (Rs.)")
         v = st.number_input("Amount", min_value=0, value=int(ans.get("wanted", 0)), step=10000)
         nav = _nav()
@@ -116,14 +181,15 @@ def main() -> None:
                 ans["wanted"] = v
                 _go(nav)
 
-    elif sid == "M3":
+    elif sid == STEP_WORK_TYPE:
         st.subheader("What do you do?")
         ans["job_label"] = st.text_input("Occupation", ans.get("job_label", ""),
                                          placeholder="e.g. kirana store")
         st.subheader("How do you get paid?")
-        t = st.radio("Income type", ["a", "b", "c"], format_func=lambda x: {
-            "a": "a) Fixed salary in bank", "b": "b) Own shop/business, file ITR",
-            "c": "c) Daily/weekly/gig cash"}[x])
+        t = st.radio("Income type", [SALARIED, SELF_EMPLOYED, INFORMAL], format_func=lambda x: {
+            SALARIED: "Fixed salary in bank",
+            SELF_EMPLOYED: "Own shop/business, file ITR",
+            INFORMAL: "Daily/weekly/gig cash"}[x])
         nav = _nav()
         if nav == "back":
             _go(nav)
@@ -131,10 +197,10 @@ def main() -> None:
             ans["income_type"] = t
             _go(nav)
 
-    elif sid == "M4":
+    elif sid == STEP_MONTHLY_INCOME:
         st.subheader("Your net monthly in-hand income? (Rs.)")
-        t_now = ans.get("income_type", "a")
-        if t_now == "c":
+        t_now = branch_for(ans)
+        if t_now == INFORMAL:
             lo = st.number_input("LOW month income", min_value=0,
                                  value=int(ans.get("income_self", 0)), step=1000)
             hi = st.number_input("HIGH month income", min_value=0,
@@ -161,7 +227,7 @@ def main() -> None:
             ans["co_changed"] = ch
             _go(nav)
 
-    elif sid == "M5":
+    elif sid == STEP_CURRENT_LOANS:
         st.subheader("Total EMI + app-loan + BNPL you pay per month? (Rs.)")
         v = st.number_input("Old EMI", min_value=0, value=int(ans.get("old_emi", 0)), step=500)
         b, bc = "no", 0
@@ -182,7 +248,7 @@ def main() -> None:
                 ans.pop("bounce_note", None)
             _go(nav)
 
-    elif sid == "M6":
+    elif sid == STEP_MONTHLY_EXPENSES:
         if "_exp_pending" in ans:
             st.subheader(f"We assumed Rs.{ans['_exp_pending']:,.0f} monthly spending. Correct?")
             c1, c2 = st.columns(2)
@@ -209,11 +275,11 @@ def main() -> None:
                     ans["expenses"] = v
                     _go(nav)
 
-    elif sid == "M7":
+    elif sid == STEP_AGE:
         st.subheader("Your age?")
         v = st.number_input("Age", min_value=18, max_value=70, value=int(ans.get("age", 35)))
         try:
-            _m = max_tenure_months(int(v), str(ans.get("income_type", "a")).startswith("a"),
+            _m = max_tenure_months(int(v), _is_salaried(ans),
                                    str(ans.get("product", "personal")))
             if _m <= 84:
                 st.info(f"Lenders cap tenure around {_m // 12} years at this age, so EMIs run higher.")
@@ -226,7 +292,7 @@ def main() -> None:
             ans["age"] = int(v)
             _go(nav)
 
-    elif sid == "M8":
+    elif sid == STEP_CREDIT_SCORE:
         if "_score_pending" in ans:
             band, label = ans["_score_pending"]
             st.subheader(f"We read this as: {label}. Correct?")
@@ -252,7 +318,7 @@ def main() -> None:
                 ans["_score_pending"] = list(parse_score(raw))
                 st.rerun()
 
-    elif sid == "M9":
+    elif sid == STEP_SAFETY_BACKUP:
         st.subheader("If income stops for 2 months, how will you pay EMI?")
         bf = st.radio("Backup", ["none", "family", "1-2", "3+"], format_func=lambda x: {
             "none": "No backup", "family": "Family/friend covers 1-2 EMIs",
@@ -264,7 +330,7 @@ def main() -> None:
             ans["buffer"] = bf
             _go(nav)
 
-    elif sid == "S1":
+    elif sid == STEP_EXISTING_OFFER:
         st.subheader("Have you already got a loan offer?")
         has = st.radio("Offer?", ["Skip", "Yes"], horizontal=True)
         if has == "Yes":
@@ -274,7 +340,7 @@ def main() -> None:
                                                value=float(ans.get("offer_fee", 1.0)))
             try:
                 _pm = max_tenure_months(int(ans.get("age", 35)),
-                                        str(ans.get("income_type", "a")).startswith("a"),
+                                        _is_salaried(ans),
                                         str(ans.get("product", "personal")))
                 _pm = _pm or 60
                 _std = _pm if str(ans.get("product", "personal")) in ("home", "lap") else min(_pm, 60)
@@ -291,7 +357,7 @@ def main() -> None:
                     ans.pop(k, None)
             _go(nav)
 
-    elif sid == "A-S1":
+    elif sid == STEP_JOB_STABILITY:
         st.subheader("How long in your current job?")
         v = st.radio("Job vintage", ["<1yr", "1-3yr", "5yr+"], horizontal=True)
         e = st.radio("Employer type?", ["Small company / Other", "MNC / Govt / Large co."],
@@ -308,7 +374,7 @@ def main() -> None:
             ans["employer"] = "mnc" if e.startswith("MNC") else "other"
             _go(nav)
 
-    elif sid == "A-S3":
+    elif sid == STEP_CARD_USAGE:
         st.subheader("How much of your credit card limit do you use?")
         v = st.radio("Card use", ["No card", "<30%", "30-70%", ">70%"], horizontal=True)
         nav = _nav(skip=True)
@@ -321,7 +387,7 @@ def main() -> None:
             ans["card_util"] = None if v == "No card" else v
             _go(nav)
 
-    elif sid == "A-B2":
+    elif sid == STEP_YEARLY_ITR:
         st.subheader("What does your ITR show per year? (Rs.)")
         v = st.number_input("ITR annual", min_value=0, value=int(ans.get("itr_annual", 0)), step=10000)
         nav = _nav(skip=True)
@@ -334,7 +400,7 @@ def main() -> None:
             ans["itr_annual"] = v
             _go(nav)
 
-    elif sid == "A-B3":
+    elif sid == STEP_PROPERTY_COLLATERAL:
         st.subheader("Do you own a shop or house free of any loan?")
         v = st.number_input("Its value in Rs. (0 if none)", min_value=0,
                             value=int(ans.get("collateral_value", 0)), step=50000)
@@ -359,7 +425,7 @@ def main() -> None:
                 ans.pop("collateral_type", None)
             _go(nav)
 
-    elif sid == "A-B1":
+    elif sid == STEP_BUSINESS_AGE:
         st.subheader("How old is your business?")
         v = st.radio("Business vintage", ["<2yr", "2-10yr", "10yr+"], horizontal=True)
         nav = _nav(skip=True)
@@ -372,7 +438,7 @@ def main() -> None:
             ans["biz_vintage"] = v
             _go(nav)
 
-    elif sid == "A-B5":
+    elif sid == STEP_BUSINESS_EXTRA_INCOME:
         st.subheader("Will this loan earn you extra every month? How much? (Rs.)")
         v = st.number_input("Extra per month (0 if none)", min_value=0,
                             value=int(ans.get("biz_extra_income", 0)), step=1000)
@@ -386,7 +452,7 @@ def main() -> None:
             ans["biz_extra_income"] = v
             _go(nav)
 
-    elif sid == "A-C4":
+    elif sid == STEP_VEHICLE_EXTRA_INCOME:
         st.subheader("Will this asset increase your income? By how much per month? (Rs.)")
         v = st.number_input("Extra per month (0 if none)", min_value=0,
                             value=int(ans.get("scooter_extra_income", 0)), step=500)
@@ -400,7 +466,7 @@ def main() -> None:
             ans["scooter_extra_income"] = v
             _go(nav)
 
-    elif sid == "A-C3":
+    elif sid == STEP_APP_LOANS_DETAIL:
         st.subheader("App loans outstanding? (Rs. and rate %)")
         o = st.number_input("Outstanding (0 if none)", min_value=0,
                             value=int(ans.get("app_outstanding", 0)), step=1000)
@@ -423,7 +489,7 @@ def main() -> None:
                 ans.pop("app_rate", None)
             _go(nav)
 
-    else:  # DONE
+    else:  # results
         ans.pop("_score_pending", None)
         ans.pop("_exp_pending", None)
         ba = {k: v for k, v in ans.items()
