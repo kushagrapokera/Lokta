@@ -1,4 +1,4 @@
-"""O1 verdict hierarchy. Decided LAST, first match wins."""
+"""Final advice: Borrow / Don't borrow / Borrow less. First matching rule wins."""
 
 from rules import config
 from rules.questions import is_productive

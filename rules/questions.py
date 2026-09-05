@@ -36,6 +36,8 @@ SUB_OPTIONS = {
                  ("biz_unsure", "Not sure yet", "unknown")],
 }
 
+
+
 # Sub-purposes that settle productive=True right at M1 (earning assets).
 EARN_SUBS = {"vehicle_earn", "biz_stock", "biz_machine", "biz_expand", "biz_vehicle", "biz_cash",
              "home_buy", "home_build"}
@@ -52,16 +54,27 @@ def product_for_sub(code: str) -> str:
     return "unknown"
 
 
+# Readable work-type names used across the app.
+# Old short codes "a"/"b"/"c" still work (accepted for backward compatibility).
+SALARIED = "salaried"
+SELF_EMPLOYED = "self_employed"
+INFORMAL = "informal"
+
+
 def branch_for(answers: dict) -> str:
-    """Return 'a' | 'b' | 'c' from M3b income_type. Defaults to 'a' only if missing."""
-    t = str(answers.get("income_type", answers.get("M3b", "a"))).strip().lower()
+    """Which borrower path? Returns 'salaried' | 'self_employed' | 'informal'.
+
+    Reads answers["income_type"]. Accepts old codes "a"/"b"/"c" too.
+    Defaults to 'salaried' only if missing.
+    """
+    t = str(answers.get("income_type", answers.get("M3b", "salaried"))).strip().lower()
     if t in ("a", "salaried", "salary"):
-        return "a"
-    if t in ("b", "self", "self-employed", "business"):
-        return "b"
+        return SALARIED
+    if t in ("b", "self", "self-employed", "self_employed", "business"):
+        return SELF_EMPLOYED
     if t in ("c", "informal", "gig", "cash"):
-        return "c"
-    return "a"
+        return INFORMAL
+    return SALARIED
 
 
 def parse_score(raw: object) -> tuple[str, str]:
@@ -94,7 +107,7 @@ def parse_score(raw: object) -> tuple[str, str]:
 
 
 def is_productive(answers: dict) -> bool | None:
-    """Final productive flag. Sub-purpose settles it first; else M1a provisional + A-B5/A-C4 final."""
+    """Will this loan earn extra income? Sub-purpose decides first, else extra-income answers."""
     sub = str(answers.get("sub_purpose", "")).lower()
     if sub in EARN_SUBS:
         return True
@@ -102,12 +115,12 @@ def is_productive(answers: dict) -> bool | None:
         return False
     purpose = str(answers.get("purpose", "other")).lower()
     branch = branch_for(answers)
-    if branch == "b" and "biz_extra_income" in answers:
+    if branch == SELF_EMPLOYED and "biz_extra_income" in answers:
         try:
             return float(answers.get("biz_extra_income") or 0) > 0
         except (TypeError, ValueError):
             return None
-    if branch == "c" and "scooter_extra_income" in answers:
+    if branch == INFORMAL and "scooter_extra_income" in answers:
         try:
             return float(answers.get("scooter_extra_income") or 0) > 0
         except (TypeError, ValueError):
@@ -117,7 +130,7 @@ def is_productive(answers: dict) -> bool | None:
     if purpose in ("wedding", "personal", "travel", "gadget", "medical"):
         return False
     if purpose == "vehicle":
-        return None  # unknown until A-B5/A-C4
+        return None  # unknown until extra-income question is answered
     if purpose in ("home", "education"):
         return True
     return None

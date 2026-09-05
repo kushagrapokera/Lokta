@@ -1,6 +1,7 @@
-"""O3 base band by product (Sept 2026) + adjustments. Band only, never point."""
+"""Fair interest-rate band (Sept 2026) + adjustments. Always a band, never a single number."""
 
 from rules import config
+from rules.questions import branch_for, SALARIED, SELF_EMPLOYED
 
 
 def _product_key(product: str) -> str:
@@ -42,8 +43,8 @@ def fair_rate(answers: dict) -> dict:
         adj += config.ADJ_SCORE_BELOW_650
         notes.append("score <650 +1.5%")
 
-    branch = str(answers.get("income_type", "a")).lower()
-    if branch.startswith("a"):
+    work_type = branch_for(answers)
+    if work_type == SALARIED:
         vint = str(answers.get("job_vintage", "")).lower()
         emp = str(answers.get("employer", "")).lower()
         if vint in ("5yr+", "5+", "5 plus") or emp in ("mnc", "govt", "large"):
@@ -56,7 +57,7 @@ def fair_rate(answers: dict) -> dict:
         if card in (">70%", "high", "70+"):
             adj += config.ADJ_CARD_HIGH
             notes.append("card >70% +1%")
-    if branch.startswith("b"):
+    if work_type == SELF_EMPLOYED:
         vint = str(answers.get("biz_vintage", "")).lower()
         if vint in ("10yr+", "10+", "14yr", "long"):
             adj += -0.5
@@ -77,7 +78,7 @@ def fair_rate(answers: dict) -> dict:
         adj += config.ADJ_BOUNCE_ONE
         notes.append("1 bounce +1%")
 
-    if branch.startswith("b") and float(answers.get("collateral_value", 0) or 0) > 0 \
+    if work_type == SELF_EMPLOYED and float(answers.get("collateral_value", 0) or 0) > 0 \
             and bool(answers.get("collateral_free", False)):
         ctype = str(answers.get("collateral_type", "residential")).lower()
         if ctype.startswith("com"):

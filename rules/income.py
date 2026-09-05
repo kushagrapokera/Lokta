@@ -1,4 +1,4 @@
-"""Normalize M4a/M4b + A-B2 into Income_safe vs Income_lender."""
+"""Monthly income: safe number (what you really get) vs lender number (what bank counts)."""
 
 
 def _f(x, default=0.0) -> float:
@@ -13,14 +13,14 @@ def normalize_income(answers: dict) -> dict:
     self_low = _f(answers.get("income_self", 0))
     co = _f(answers.get("co_income", 0))
     co_active = bool(answers.get("co_active", co > 0))
-    # Stopped earner excluded entirely from safe (M4b lock).
+    # A co-earner who stopped earning adds nothing to the safe number.
     co_counts_safe = co_active and str(answers.get("co_changed", "no")).lower() not in (
         "stopped", "yes_stopped", "unemployed")
 
     income_safe = self_low + (co if co_counts_safe else 0.0)
 
-    branch = str(answers.get("income_type", "a")).lower()
-    if branch.startswith("b"):
+    from rules.questions import branch_for, SELF_EMPLOYED
+    if branch_for(answers) == SELF_EMPLOYED:
         itr_annual = _f(answers.get("itr_annual", 0))
         base_lender = itr_annual / 12.0 if itr_annual > 0 else self_low
     else:

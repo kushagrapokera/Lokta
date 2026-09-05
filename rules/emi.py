@@ -1,4 +1,4 @@
-"""EMI math, tenure cap, O4 ceiling, stress test."""
+"""EMI math, max loan years, and monthly EMI ceiling you should not cross."""
 
 from rules import config
 
@@ -35,9 +35,15 @@ def max_tenure_months(age: int, salaried: bool, product: str) -> int:
 
 
 def foir_cap(answers: dict) -> float:
-    t = str(answers.get("income_type", "a")).lower()
-    base = config.FOIR_SALARIED if t.startswith("a") else (
-        config.FOIR_SELF_EMPLOYED if t.startswith("b") else config.FOIR_INFORMAL)
+    """Max share of income allowed for all EMIs (FOIR cap)."""
+    from rules.questions import branch_for, SALARIED, SELF_EMPLOYED
+    work_type = branch_for(answers)
+    if work_type == SALARIED:
+        base = config.FOIR_SALARIED
+    elif work_type == SELF_EMPLOYED:
+        base = config.FOIR_SELF_EMPLOYED
+    else:
+        base = config.FOIR_INFORMAL
     bounce = str(answers.get("bounce", "no")).lower() == "yes"
     buf = str(answers.get("buffer", "unknown")).lower()
     if bounce:
@@ -47,7 +53,7 @@ def foir_cap(answers: dict) -> float:
             base = config.FOIR_INFORMAL
     if buf == "none" and base > config.FOIR_INFORMAL_WITH_BUFFER:
         base = config.FOIR_INFORMAL_WITH_BUFFER
-    if buf == "none" and str(answers.get("income_type", "a")).lower().startswith("a"):
+    if buf == "none" and work_type == SALARIED:
         base = min(base, config.FOIR_INFORMAL_WITH_BUFFER)
     return base
 

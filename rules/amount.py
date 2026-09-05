@@ -1,4 +1,4 @@
-"""O2 lender vs safe amounts."""
+"""Max loan amount: what bank may give (lender) vs what you can safely carry (safe)."""
 
 from rules import config
 from rules.emi import principal_for_emi
