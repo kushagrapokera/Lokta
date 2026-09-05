@@ -1,7 +1,7 @@
 """Adaptive flow tests: injections, offer-APR card, zero-EMI bounce skip.
 No hardcoded outputs — behavior must be earned."""
 
-from app import (
+from rules.flow import (
     _branch_steps,
     STEP_PROPERTY_COLLATERAL,
     STEP_APP_LOANS_DETAIL,
@@ -39,8 +39,8 @@ def test_large_wanted_injects_collateral_small_does_not():
 def test_zero_emi_skips_bounce_penalty():
     o = compute(_base("salaried", old_emi=0, bounce="no"))
     assert all("bounce" not in n for n in o["rate"]["notes"])
-    o2 = compute(_base("salaried", old_emi=5000, bounce="yes", bounce_count=1))
-    assert any("bounce" in n for n in o2["rate"]["notes"])
+    o_with_bounce = compute(_base("salaried", old_emi=5000, bounce="yes", bounce_count=1))
+    assert any("bounce" in n for n in o_with_bounce["rate"]["notes"])
 
 
 def test_offer_card_compares_apr_with_tenure():
@@ -57,7 +57,7 @@ def test_offer_card_compares_apr_with_tenure():
 
 def test_old_short_codes_still_work():
     """Backward compat: old 'a'/'b'/'c' and 'A-B3' callers keep working."""
-    from app import OLD_TO_NEW_STEP
+    from rules.flow import OLD_TO_NEW_STEP
     assert OLD_TO_NEW_STEP["A-B3"] == STEP_PROPERTY_COLLATERAL
     assert OLD_TO_NEW_STEP["A-C3"] == STEP_APP_LOANS_DETAIL
     assert STEP_PROPERTY_COLLATERAL in _branch_steps(_base("a", sub_purpose="home_lap"))
