@@ -46,34 +46,34 @@ def test_no_numbers_outside_config():
 
 def _priya():
     return {"purpose": "personal", "product": "personal", "wanted": 800000,
-            "income_type": "a", "income_self": 110000, "co_income": 0,
+            "income_type": "salaried", "income_self": 110000, "co_income": 0,
             "co_active": False, "old_emi": 14000, "bounce": "no",
             "expenses": 55000, "age": 29, "score": "750+",
             "buffer": "3+", "job_vintage": "5yr+", "employer": "mnc",
-            "card_util": "<30%", "branch_answers": {"A-S1": "5yr+", "A-S2": "0%"}}
+            "card_util": "<30%", "branch_answers": {"job_stability": "5yr+", "variable_pay": "0%"}}
 
 
 def _ravi():
     return {"purpose": "business", "product": "lap", "wanted": 1500000,
-            "income_type": "b", "income_self": 60000, "co_income": 18000,
+            "income_type": "self_employed", "income_self": 60000, "co_income": 18000,
             "co_active": True, "co_changed": "no", "itr_annual": 420000,
             "old_emi": 0, "bounce": "no", "expenses": 30000, "age": 42,
             "score": "no_history", "buffer": "1-2",
             "collateral_value": 4500000, "collateral_free": True,
             "collateral_type": "commercial", "biz_vintage": "10yr+",
             "biz_extra_income": 20000,
-            "branch_answers": {"A-B1": "10yr+", "A-B2": "4.2L", "A-B3": "45L"}}
+            "branch_answers": {"business_age": "10yr+", "yearly_itr": "4.2L", "property_collateral": "45L"}}
 
 
 def _anita():
     return {"purpose": "vehicle", "product": "two_wheeler", "wanted": 150000,
-            "income_type": "c", "income_self": 28000, "co_income": 0,
+            "income_type": "informal", "income_self": 28000, "co_income": 0,
             "co_active": False, "co_changed": "stopped", "old_emi": 4000,
             "bounce": "yes", "bounce_count": 1, "expenses": 22000, "age": 35,
             "score": "unknown", "buffer": "none",
             "app_outstanding": 35000, "app_rate": 32,
             "scooter_extra_income": 9000,
-            "branch_answers": {"A-C2": "2 kids", "A-C3": "35k@32%"}}
+            "branch_answers": {"family_dependents": "2 kids", "app_loans_detail": "35k@32%"}}
 
 
 def test_priya_passes_math_but_wedding_guarded():
@@ -110,12 +110,12 @@ def test_unknown_score_never_zero_and_edges():
     from rules.engine import compute
     from rules.apr import apr
     o = compute({"purpose": "personal", "product": "personal", "wanted": 100000,
-                 "income_type": "a", "income_self": 50000, "old_emi": 0,
+                 "income_type": "salaried", "income_self": 50000, "old_emi": 0,
                  "bounce": "unknown", "expenses": 20000, "age": 30,
                  "score": "unknown", "buffer": "unknown", "branch_answers": {}})
     assert o["rate"]["high"] < 40  # finite, never treated as 300-score penalty blowup
     z = compute({"purpose": "personal", "product": "personal", "wanted": 50000,
-                 "income_type": "a", "income_self": 0, "old_emi": 0,
+                 "income_type": "salaried", "income_self": 0, "old_emi": 0,
                  "expenses": 20000, "age": 30, "score": "unknown",
                  "buffer": "none", "branch_answers": {}})
     assert z["ceiling"] == 0 and z["verdict"]["verdict"] == "Don't borrow"

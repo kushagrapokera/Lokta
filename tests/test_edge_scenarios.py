@@ -7,30 +7,30 @@ from rules.engine import compute
 def _easy():
     # Rohan, 32, Pune, salaried. All must answered + offer given.
     return {"purpose": "personal", "product": "personal", "wanted": 500000,
-            "income_type": "a", "income_self": 80000, "co_income": 0,
+            "income_type": "salaried", "income_self": 80000, "co_income": 0,
             "co_active": False, "old_emi": 0, "bounce": "no",
             "expenses": 35000, "age": 32, "score": "750+",
             "buffer": "3+", "job_vintage": "5yr+", "employer": "mnc",
             "card_util": "<30%", "offer_rate": 12.0, "offer_fee": 1.5,
-            "branch_answers": {"A-S1": "5yr+"}}
+            "branch_answers": {"job_stability": "5yr+"}}
 
 
 def _medium():
     # Meena, 38, Jaipur boutique, self-employed. Blanks: score unknown,
     # co-earner skipped, offer skipped, collateral skipped.
     return {"purpose": "business", "product": "business", "wanted": 1000000,
-            "income_type": "b", "income_self": 55000,
+            "income_type": "self_employed", "income_self": 55000,
             "old_emi": 12000, "bounce": "no", "expenses": 28000, "age": 38,
             "score": "unknown", "buffer": "family", "itr_annual": 480000,
             "biz_vintage": "2-10yr", "biz_extra_income": 15000,
-            "branch_answers": {"A-B1": "2-10yr"}}
+            "branch_answers": {"business_age": "2-10yr"}}
 
 
 def _hard():
     # Salim, 45, auto driver, informal. Blanks: expenses, co-earner,
     # old EMI, bounce unknown, extra income unproven.
     return {"purpose": "vehicle", "product": "two_wheeler", "wanted": 120000,
-            "income_type": "c", "income_self": 22000,
+            "income_type": "informal", "income_self": 22000,
             "bounce": "unknown", "age": 45, "score": "no_history",
             "buffer": "none", "branch_answers": {}}
 
