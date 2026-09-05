@@ -106,7 +106,7 @@ def main() -> None:
                   f"  Flip: {o['verdict']['flip']}",
                   f"- O2: lender {o['amount']['lender']:,.0f} / safe {o['amount']['safe']:,.0f} / use {o['amount']['use']:,.0f} (wanted {o['amount']['wanted']:,.0f})",
                   f"- O3: {o['rate']['low']}–{o['rate']['high']}% (base {o['rate']['base']}, adj {o['rate']['adj']}; {'; '.join(o['rate']['notes']) or 'no adjustments'})",
-                  f"- O4: ceiling {o['ceiling']:,.0f} (FOIR cap {o['foir_cap']*100:.0f}%), EMI {o['new_emi']:,.0f}/{o['std_months']}mo, surplus {o['surplus']:,.0f}, stress {'passes' if o['stress_pass'] else 'fails'}",
+                  f"- O4: ceiling {o['ceiling']:,.0f} (max EMI share {o['max_emi_share']*100:.0f}%), EMI {o['new_emi']:,.0f}/{o['std_months']}mo, surplus {o['surplus']:,.0f}, stress {'passes' if o['stress_pass'] else 'fails'}",
                   f"- Confidence: {o['confidence']['level']} ({o['confidence']['unknowns']} unknowns)"
                   + ("; spend assumed 40%, fill actual" if o.get("estimated_exp") else ""),
                   "- Card:"] + [f"  - {l}" for l in o["card"]["lines"]]

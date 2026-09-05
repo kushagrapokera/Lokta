@@ -3,7 +3,7 @@
 from rules import config
 from rules.emi import principal_for_emi
 from rules.income import normalize_income
-from rules.emi import foir_cap
+from rules.emi import max_emi_share
 
 
 def _f(x, default=0.0) -> float:
@@ -16,10 +16,10 @@ def _f(x, default=0.0) -> float:
 
 def max_amount(answers: dict, fair_mid: float, months: int) -> dict:
     inc = normalize_income(answers)
-    cap = foir_cap(answers)
+    max_share = max_emi_share(answers)
     old = _f(answers.get("old_emi", 0))
-    lender_cap = max(0.0, inc["income_lender"] * cap - old)
-    safe_cap = max(0.0, inc["income_safe"] * cap - old)
+    lender_cap = max(0.0, inc["income_lender"] * max_share - old)
+    safe_cap = max(0.0, inc["income_safe"] * max_share - old)
 
     product = str(answers.get("product", "personal")).lower()
     base_key = {"lap": "lap_bank", "home": "home", "two_wheeler": "two_wheeler",

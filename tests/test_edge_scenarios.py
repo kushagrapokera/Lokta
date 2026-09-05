@@ -59,5 +59,5 @@ def test_hard_many_blanks_estimated_never_borrow():
     assert o["confidence"]["level"] == "Low"
     assert o["verdict"]["verdict"] in ("Don't borrow", "Borrow less", "Borrow with conditions")
     assert o["verdict"]["verdict"] != "Borrow"
-    assert "40%" in o["why"]["o4"]
+    assert "40%" in o["why"]["ceiling_reason"]
     assert len(o["card"]["lines"]) == 5

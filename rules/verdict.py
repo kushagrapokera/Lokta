@@ -14,7 +14,7 @@ def _f(x, default=0.0) -> float:
 
 def verdict(answers: dict, c: dict) -> dict:
     surplus = c.get("surplus", 0)
-    foir_breach = c.get("foir_breach", False)
+    over_emi_limit = c.get("over_emi_limit", False)
     stress_pass = c.get("stress_pass", True)
     productive = is_productive(answers)
     bounce = str(answers.get("bounce", "no")).lower() == "yes"
@@ -26,7 +26,7 @@ def verdict(answers: dict, c: dict) -> dict:
         return {"verdict": "Don't borrow",
                 "reason": f"Surplus Rs.{surplus:,.0f} below zero after new EMI.",
                 "flip": "Lower amount or longer tenure until surplus stays above zero."}
-    if foir_breach and buf == "none" and (bounce or high_cost):
+    if over_emi_limit and buf == "none" and (bounce or high_cost):
         return {"verdict": "Don't borrow",
                 "reason": "EMI share over safe cap with no backup plus bounce or 30%+ loans.",
                 "flip": "Close high-cost loans first and build 1-2 months backup."}
@@ -57,5 +57,5 @@ def verdict(answers: dict, c: dict) -> dict:
                 "reason": "Passes today but fails stress test.",
                 "flip": "Keep 1-2 EMIs backup before borrowing."}
     return {"verdict": "Borrow",
-            "reason": "Surplus positive, within FOIR cap, passes stress.",
+            "reason": "Surplus positive, within EMI share cap, passes stress.",
             "flip": "Stay under EMI ceiling."}

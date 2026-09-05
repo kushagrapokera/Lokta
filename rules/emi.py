@@ -34,29 +34,29 @@ def max_tenure_months(age: int, salaried: bool, product: str) -> int:
     return int(min(age_cap, prod))
 
 
-def foir_cap(answers: dict) -> float:
-    """Max share of income allowed for all EMIs (FOIR cap)."""
+def max_emi_share(answers: dict) -> float:
+    """Max share of income allowed for all EMIs."""
     from rules.questions import branch_for, SALARIED, SELF_EMPLOYED
     work_type = branch_for(answers)
     if work_type == SALARIED:
-        base = config.FOIR_SALARIED
+        base = config.MAX_EMI_SHARE_SALARIED
     elif work_type == SELF_EMPLOYED:
-        base = config.FOIR_SELF_EMPLOYED
+        base = config.MAX_EMI_SHARE_SELF_EMPLOYED
     else:
-        base = config.FOIR_INFORMAL
+        base = config.MAX_EMI_SHARE_INFORMAL
     bounce = str(answers.get("bounce", "no")).lower() == "yes"
     buf = str(answers.get("buffer", "unknown")).lower()
     if bounce:
-        if base >= config.FOIR_SALARIED:
-            base = config.FOIR_SELF_EMPLOYED
-        elif base >= config.FOIR_SELF_EMPLOYED:
-            base = config.FOIR_INFORMAL
-    if buf == "none" and base > config.FOIR_INFORMAL_WITH_BUFFER:
-        base = config.FOIR_INFORMAL_WITH_BUFFER
+        if base >= config.MAX_EMI_SHARE_SALARIED:
+            base = config.MAX_EMI_SHARE_SELF_EMPLOYED
+        elif base >= config.MAX_EMI_SHARE_SELF_EMPLOYED:
+            base = config.MAX_EMI_SHARE_INFORMAL
+    if buf == "none" and base > config.MAX_EMI_SHARE_INFORMAL_WITH_BUFFER:
+        base = config.MAX_EMI_SHARE_INFORMAL_WITH_BUFFER
     if buf == "none" and work_type == SALARIED:
-        base = min(base, config.FOIR_INFORMAL_WITH_BUFFER)
+        base = min(base, config.MAX_EMI_SHARE_INFORMAL_WITH_BUFFER)
     return base
 
 
-def emi_ceiling(income_safe: float, foir_cap_value: float, old_emi: float) -> float:
-    return max(0.0, income_safe * foir_cap_value - max(0.0, old_emi))
+def emi_ceiling(income_safe: float, max_share_value: float, old_emi: float) -> float:
+    return max(0.0, income_safe * max_share_value - max(0.0, old_emi))

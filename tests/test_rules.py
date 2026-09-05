@@ -7,9 +7,9 @@ import importlib
 def test_config_has_locked_keys():
     from rules import config
     assert config.REPO_RATE == 5.25
-    assert config.FOIR_SALARIED == 0.55
-    assert config.FOIR_SELF_EMPLOYED == 0.45
-    assert config.FOIR_INFORMAL == 0.30
+    assert config.MAX_EMI_SHARE_SALARIED == 0.55
+    assert config.MAX_EMI_SHARE_SELF_EMPLOYED == 0.45
+    assert config.MAX_EMI_SHARE_INFORMAL == 0.30
     assert config.WANT_VS_SAFE_BORROW_LESS == 1.5
     assert config.STRESS_INCOME_DROP == 0.20
     assert config.STRESS_RATE_HIKE == 2.0
@@ -18,7 +18,7 @@ def test_config_has_locked_keys():
 
 
 def test_all_rule_modules_importable():
-    for m in ["config", "questions", "income", "emi", "amount", "fair_rate",
+    for m in ["config", "questions", "flow", "income", "emi", "amount", "fair_rate",
               "apr", "verdict", "confidence", "card", "explain"]:
         assert importlib.import_module(f"rules.{m}") is not None
 
@@ -34,9 +34,9 @@ def test_no_numbers_outside_config():
              if p.name not in ("config.py", "test_rules.py")]
     bad_lits = [str(p) for p in files
                 if any(n in p.read_text() for n in ["0.55", "0.45"])]
-    assert bad_lits == [], f"FOIR literals outside config: {bad_lits}"
+    assert bad_lits == [], f"max EMI share literals outside config: {bad_lits}"
     redef = [str(p) for p in files
-             if re.search(r"^\s*(FOIR_\w+|WANT_VS_SAFE_BORROW_LESS|HIGH_COST_RATE|"
+             if re.search(r"^\s*(MAX_EMI_SHARE_\w+|WANT_VS_SAFE_BORROW_LESS|HIGH_COST_RATE|"
                           r"EXPENSE_ESTIMATE_PCT|LAP_SUGGEST_INCOME_MULT|ADJ_\w+)\s*=",
                           p.read_text(), re.M)]
     assert redef == [], f"threshold redefinitions outside config: {redef}"
