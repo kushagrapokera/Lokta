@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Negotiation Card</title>
+<style>
+body{margin:0;background:#fff;color:#221A20;font-family:"Source Sans 3","Segoe UI",Helvetica,Arial,sans-serif}
+.card{max-width:24rem;margin:0 auto;padding:1rem;border:2px solid #4B2440;border-radius:10px}
+.card h2{margin:.1rem 0 .4rem;font-size:1.2rem}
+.card .who{font-size:.85rem;color:#6E6069;margin:0 0 .5rem}
+.card .big{font-size:1.05rem;font-weight:700;margin:.4rem 0}
+.card ul{margin:.4rem 0;padding-left:1.1rem;font-size:.92rem}
+.card .foot{font-size:.8rem;color:#6E6069;border-top:1px solid #E2D9DE;padding-top:.4rem;margin-top:.5rem}
+.tools{max-width:24rem;margin:.6rem auto;display:flex;gap:.5rem}
+button{font-size:.9rem;padding:.4rem .8rem;border-radius:6px;border:1px solid #4B2440;cursor:pointer;background:#4B2440;color:#fff}
+a.ghost button{background:#fff;color:#4B2440}
+@media print{.tools{display:none}body{background:#fff}.card{border:2px solid #000;max-width:100%}}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Negotiation Card</h2>
+<p class="who">{{ for_line }} · Wanted Rs.{{ o.amount.wanted }}</p>
+<p class="big">Fair: {{ o.rate.low }}%–{{ o.rate.high }}% (APR {{ o.fair_apr[0] }}–{{ o.fair_apr[1] }}%)</p>
+<ul>
+<li>EMI ceiling: Rs.{{ o.ceiling }}/month — do not cross it.</li>
+<li>Safe Rs.{{ o.amount.safe }} vs sanction Rs.{{ o.amount.lender }} — use Rs.{{ o.amount.use }}.</li>
+<li>Confidence: {{ o.confidence.level }} ({{ answered }}/{{ total }} questions).</li>
+<li>{{ o.verdict.verdict }} — {{ o.verdict.reason }}</li>
+</ul>
+<p class="foot">Same numbers as the Results screen — one computation.</p>
+</div>
+<div class="tools">
+<button onclick="window.print()">Print / Save PDF</button>
+<a class="ghost" href="{{ url_for('card_download') }}"><button>Download .txt</button></a>
+<a class="ghost" href="{{ url_for('step') }}"><button>Back to results</button></a>
+</div>
+</body>
+</html>
