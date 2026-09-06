@@ -10,6 +10,7 @@ from rules.questions import SUB_OPTIONS, SALARIED, SELF_EMPLOYED, INFORMAL, bran
 
 STEP_LOAN_PURPOSE = "loan_purpose"
 STEP_LOAN_AMOUNT = "loan_amount"
+STEP_REPAYMENT_TENURE = "repayment_tenure"
 STEP_WORK_TYPE = "work_type"
 STEP_MONTHLY_INCOME = "monthly_income"
 STEP_CURRENT_LOANS = "current_loans"
@@ -32,6 +33,7 @@ STEP_RESULTS = "results"
 MUST_STEPS = [
     STEP_LOAN_PURPOSE,
     STEP_LOAN_AMOUNT,
+    STEP_REPAYMENT_TENURE,
     STEP_WORK_TYPE,
     STEP_MONTHLY_INCOME,
     STEP_CURRENT_LOANS,
