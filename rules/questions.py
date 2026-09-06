@@ -2,7 +2,6 @@
 
 import re
 
-# Step-2 sub-purposes: natural labels for UI, product derived silently.
 # (code, label, product). Product keys must match fair_rate bands.
 SUB_OPTIONS = {
     "Home": [("home_buy", "Buying a ready house / flat", "home"),
