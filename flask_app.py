@@ -3,7 +3,7 @@
 Run: conda run -n lokta python flask_app.py  (opens http://127.0.0.1:5000)
 """
 
-from flask import Flask, redirect, render_template, request, session, url_for
+from flask import Flask, Response, redirect, render_template, request, session, url_for
 
 from rules import config
 from rules.emi import max_tenure_months
@@ -30,10 +30,25 @@ from rules.flow import (
     STEP_RESULTS,
     STEP_VEHICLE_EXTRA_INCOME,
     STEP_YEARLY_ITR,
+    _branch_steps,
     _normalize_step,
     _steps,
 )
 
+# Must-screen id -> answer keys proving it was answered (empty = always counts).
+MUST_ANSWER_KEYS = {
+    "loan_purpose": ("sub_purpose",),
+    "loan_amount": ("wanted",),
+    "repayment_tenure": ("desired_years",),
+    "work_type": ("income_type",),
+    "monthly_income": ("income_self",),
+    "current_loans": ("old_emi",),
+    "monthly_expenses": ("expenses",),
+    "age": ("age",),
+    "credit_score": ("score",),
+    "safety_backup": ("buffer",),
+    "existing_offer": (),
+}
 flask_app = Flask(__name__)
 flask_app.secret_key = "dev-borrower-copilot-not-for-prod"
 
@@ -51,6 +66,7 @@ BRANCH_SIDS = {
 TITLES = {
     "loan_purpose": "What do you need the loan for?",
     "loan_amount": "How much do you want? (Rs.)",
+    "repayment_tenure": "In how many years do you want to repay?",
     "work_type": "What do you do?",
     "monthly_income": "Your net monthly in-hand income? (Rs.)",
     "current_loans": "Total EMI + app-loan + BNPL you pay per month? (Rs.)",
@@ -148,13 +164,13 @@ def step():
         _save(ans, s)
         return redirect(url_for("step"))
     if action == "skip" and sid in BRANCH_SIDS:
+        # Skip clears only that step's keys (each branch below names its own).
         for k in ("job_vintage", "employer", "card_util", "itr_annual", "collateral_value",
                   "collateral_free", "collateral_type", "biz_vintage", "biz_extra_income",
                   "scooter_extra_income", "app_outstanding", "app_rate"):
             # only clear keys belonging to this step; keep it simple and safe:
             pass
-    # Branch: salaried (fixed salary) only.
-    if sid == "job_stability":
+        if sid == "job_stability":
             ans.pop("job_vintage", None)
             ans.pop("employer", None)
         elif sid == "card_usage":
@@ -226,6 +242,16 @@ def _apply(sid: str, ans: dict, form) -> str | None:
         if v <= 0:
             return "Enter an amount above 0 to continue."
         ans["wanted"] = v
+        return None
+
+    if sid == "repayment_tenure":
+        try:
+            years = float(form.get("desired_years", 0) or 0)
+        except (TypeError, ValueError):
+            years = 0
+        if years <= 0:
+            return "Enter years above 0 to continue."
+        ans["desired_years"] = years
         return None
 
     if sid == "work_type":
@@ -356,22 +382,60 @@ def _apply(sid: str, ans: dict, form) -> str | None:
     return None
 
 
+def _results_bundle(ans: dict):
+    """Shared compute for results + card so numbers never drift between views."""
+    ans = dict(ans)
+    ans.pop("_score_pending", None)
+    ans.pop("_exp_pending", None)
+    ba = {k: v for k, v in ans.items()
+          if k in ("job_vintage", "employer", "card_util", "itr_annual", "collateral_value",
+                    "biz_vintage", "biz_extra_income", "scooter_extra_income",
+                    "app_outstanding", "app_rate")
+          and v not in (None, "", "skip")}
+    ans["branch_answers"] = ba
+    o = compute(ans)
+    for_line = f"For: {ans.get('purpose_label', '')} — {ans.get('sub_label', '')}"
+    if ans.get("job_label", "").strip():
+        for_line += f" ({ans['job_label'].strip()})"
+    branch_total = len(_branch_steps(ans))
+    must_answered = sum(1 for keys in MUST_ANSWER_KEYS.values()
+                        if not keys or any(k in ans for k in keys))
+    total = len(MUST_ANSWER_KEYS) + branch_total
+    answered = min(must_answered + len(ba), total)
+    return ans, o, for_line, answered, total
+
+
+@flask_app.route("/card")
+def card():
+    ans, o, for_line, answered, total = _results_bundle(_get_ans())
+    session["ans"] = ans
+    return render_template("card.html", o=o, for_line=for_line,
+                           answered=answered, total=total)
+
+
+@flask_app.route("/card/download")
+def card_download():
+    ans, o, for_line, answered, total = _results_bundle(_get_ans())
+    body = "\n".join([
+        "BORROWER NEGOTIATION CARD", for_line,
+        f"Verdict: {o['verdict']['verdict']} — {o['verdict']['reason']}",
+        f"Fair rate: {o['rate']['low']}-{o['rate']['high']}% "
+        f"(APR {o['fair_apr'][0]}-{o['fair_apr'][1]}%)",
+        f"EMI ceiling: Rs.{o['ceiling']:,.0f}/month",
+        f"Bank may sanction Rs.{o['amount']['lender']:,.0f} / "
+        f"Safe Rs.{o['amount']['safe']:,.0f} — use Rs.{o['amount']['use']:,.0f}",
+        f"Confidence: {o['confidence']['level']} ({answered}/{total} questions)",
+    ] + o["card"]["lines"])
+    return Response(body, mimetype="text/plain",
+                    headers={"Content-Disposition": "attachment;filename=negotiation-card.txt"})
+
+
 def _render(ans: dict, steps: list, s: int, sid: str, error: str = ""):
     if sid == STEP_RESULTS:
-        ans.pop("_score_pending", None)
-        ans.pop("_exp_pending", None)
-        ba = {k: v for k, v in ans.items()
-              if k in ("job_vintage", "employer", "card_util", "itr_annual", "collateral_value",
-                        "biz_vintage", "biz_extra_income", "scooter_extra_income",
-                        "app_outstanding", "app_rate")
-              and v not in (None, "", "skip")}
-        ans["branch_answers"] = ba
+        ans, o, for_line, answered, total = _results_bundle(ans)
         session["ans"] = ans
-        o = compute(ans)
-        for_line = f"For: {ans.get('purpose_label', '')} — {ans.get('sub_label', '')}"
-        if ans.get("job_label", "").strip():
-            for_line += f" ({ans['job_label'].strip()})"
-        return render_template("results.html", o=o, for_line=for_line)
+        return render_template("results.html", o=o, for_line=for_line,
+                               answered=answered, total=total)
 
     if "_exp_pending" in ans and sid == "monthly_expenses":
         return render_template("step.html", sid=sid, title=TITLES[sid], idx=s + 1,
@@ -396,6 +460,15 @@ def _render(ans: dict, steps: list, s: int, sid: str, error: str = ""):
         except (TypeError, ValueError):
             pass
 
+    max_years = 0
+    try:
+        max_years = (max_tenure_months(int(ans.get("age", 35)), _is_salaried(ans),
+                                       str(ans.get("product", "personal"))) or 60) // 12
+    except (TypeError, ValueError):
+        max_years = 5
+    if sid == "repayment_tenure" and max_years > 0:
+        note = f"Lenders typically allow up to {max_years} years for your age and product. Your pace is used as-is."
+
     return render_template(
         "step.html", sid=sid, title=TITLES.get(sid, sid), idx=s + 1, total=len(steps),
         pct=round((s + 1) / len(steps) * 100), confirm="", pending="", pending_label="",
@@ -406,6 +479,7 @@ def _render(ans: dict, steps: list, s: int, sid: str, error: str = ""):
         other_text="" if ans.get("purpose_label") != "Other" else ans.get("purpose_label", ""),
         is_informal=branch_for(ans) == INFORMAL,
         default_tenure=_default_offer_tenure(ans),
+        max_years=max_years,
     )
 
 
