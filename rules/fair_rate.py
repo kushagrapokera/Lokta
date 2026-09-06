@@ -3,7 +3,7 @@
 from rules import config
 from rules.questions import branch_for, SALARIED, SELF_EMPLOYED
 
-
+# from questions.py
 def _product_key(product: str) -> str:
     p = str(product or "personal").lower()
     if p in ("lap",):
