@@ -63,6 +63,4 @@ Informal only:
 - Extra per month (0 if none) — vehicle extra income
 - Outstanding (0 if none) + Rate % — app loans detail
 
-Cross-branch injections:
-- Property screen also appears for loan-against-house purpose or want above 10x monthly safe income.
-- App-loans screen also appears for repay-costly-loans purpose.
+
