@@ -1,8 +1,9 @@
 """EMI math, max loan years, and monthly EMI ceiling you should not cross."""
 
 from rules import config
+from rules.questions import branch_for, SALARIED, SELF_EMPLOYED
 
-
+#  converts a loan amount into its monthly payment
 def emi(principal: float, annual_rate_pct: float, months: int) -> float:
     if principal <= 0 or months <= 0:
         return 0.0
@@ -12,7 +13,7 @@ def emi(principal: float, annual_rate_pct: float, months: int) -> float:
     f = (1 + r) ** months
     return principal * r * f / (f - 1)
 
-
+# converts a monthly payment back into the loan amount it supports.
 def principal_for_emi(emi_amt: float, annual_rate_pct: float, months: int) -> float:
     if emi_amt <= 0 or months <= 0:
         return 0.0
@@ -22,7 +23,7 @@ def principal_for_emi(emi_amt: float, annual_rate_pct: float, months: int) -> fl
     f = (1 + r) ** months
     return emi_amt * (f - 1) / (r * f)
 
-
+# sets the longest loan period from age and product.
 def max_tenure_months(age: int, salaried: bool, product: str) -> int:
     try:
         age = int(age)
@@ -34,9 +35,9 @@ def max_tenure_months(age: int, salaried: bool, product: str) -> int:
     return int(min(age_cap, prod))
 
 
+# sets the allowed share of income for all EMIs.
 def max_emi_share(answers: dict) -> float:
     """Max share of income allowed for all EMIs."""
-    from rules.questions import branch_for, SALARIED, SELF_EMPLOYED
     work_type = branch_for(answers)
     if work_type == SALARIED:
         base = config.MAX_EMI_SHARE_SALARIED
@@ -44,8 +45,13 @@ def max_emi_share(answers: dict) -> float:
         base = config.MAX_EMI_SHARE_SELF_EMPLOYED
     else:
         base = config.MAX_EMI_SHARE_INFORMAL
+
+    # EMI bounced??
     bounce = str(answers.get("bounce", "no")).lower() == "yes"
+
+    # from if income stopped after x months
     buf = str(answers.get("buffer", "unknown")).lower()
+
     if bounce:
         if base >= config.MAX_EMI_SHARE_SALARIED:
             base = config.MAX_EMI_SHARE_SELF_EMPLOYED
@@ -57,6 +63,6 @@ def max_emi_share(answers: dict) -> float:
         base = min(base, config.MAX_EMI_SHARE_INFORMAL_WITH_BUFFER)
     return base
 
-
-def emi_ceiling(income_safe: float, max_share_value: float, old_emi: float) -> float:
-    return max(0.0, income_safe * max_share_value - max(0.0, old_emi))
+# affordable new emi per month
+def emi_ceiling(income_safe: float, max_share: float, old_emi: float) -> float:
+    return max(0.0, income_safe * max_share - max(0.0, old_emi))
