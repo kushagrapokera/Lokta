@@ -1,5 +1,5 @@
 """Monthly income: safe number (what you really get) vs lender number (what bank counts)."""
-
+from rules.questions import branch_for, SELF_EMPLOYED
 
 def _f(x, default=0.0) -> float:
     try:
@@ -10,25 +10,26 @@ def _f(x, default=0.0) -> float:
 
 
 def normalize_income(answers: dict) -> dict:
-    self_low = _f(answers.get("income_self", 0))
-    co = _f(answers.get("co_income", 0))
-    co_active = bool(answers.get("co_active", co > 0))
-    # A co-earner who stopped earning adds nothing to the safe number.
-    co_counts_safe = co_active and str(answers.get("co_changed", "no")).lower() not in (
-        "stopped", "yes_stopped", "unemployed")
+    own_low_month = _f(answers.get("income_self", 0))
+    co_monthly = _f(answers.get("co_income", 0))
+    has_co_earner = bool(answers.get("co_active", co_monthly > 0))
+    co_status = str(answers.get("co_changed", "no")).lower()
+    co_stopped = co_status in ("stopped", "yes_stopped", "unemployed")
+    co_counts_for_safe = has_co_earner and not co_stopped
 
-    income_safe = self_low + (co if co_counts_safe else 0.0)
+    income_safe = own_low_month + (co_monthly if co_counts_for_safe else 0.0)
 
-    from rules.questions import branch_for, SELF_EMPLOYED
-    if branch_for(answers) == SELF_EMPLOYED:
-        itr_annual = _f(answers.get("itr_annual", 0))
-        base_lender = itr_annual / 12.0 if itr_annual > 0 else self_low
+    is_self_employed = branch_for(answers) == SELF_EMPLOYED
+    itr_annual = _f(answers.get("itr_annual", 0))
+    if is_self_employed and itr_annual > 0:
+        lender_base = itr_annual / 12.0
     else:
-        base_lender = self_low
-    income_lender = base_lender + (0.5 * co if co_active else 0.0)
+        lender_base = own_low_month
+    co_lender_share = 0.5 * co_monthly if has_co_earner else 0.0
+    income_lender = lender_base + co_lender_share
 
     return {
         "income_safe": round(income_safe, 2),
         "income_lender": round(income_lender, 2),
-        "co_counts_safe": co_counts_safe,
+        "co_counts_safe": co_counts_for_safe,
     }
