@@ -72,6 +72,9 @@ filt();
 {% elif sid == "loan_amount" %}
 <label class="field">Amount (Rs.)<input type="number" name="wanted" min="0" step="10000" value="{{ ans.get('wanted',0) }}"></label>
 
+{% elif sid == "repayment_tenure" %}
+<label class="field">Years<input type="number" name="desired_years" min="0.5" step="0.5" value="{{ ans.get('desired_years', max_years) }}"></label>
+
 {% elif sid == "work_type" %}
 <label class="field">Occupation<input name="job_label" value="{{ ans.get('job_label','') }}" placeholder="e.g. kirana store"></label>
 <label class="field">How do you get paid?</label>
