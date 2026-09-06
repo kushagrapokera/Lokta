@@ -1,19 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
 <p class="small">{{ for_line }}</p>
-<h2>Verdict: {{ o.verdict.verdict }}</h2>
+<h2>Our advice: {{ o.verdict.verdict }}</h2>
 <p>{{ o.verdict.reason }}</p>
-<p class="small">Flip: {{ o.verdict.flip }}</p>
-<div class="metrics">
-<div class="metric"><div class="k">Bank may sanction</div><div class="v">Rs.{{ o.amount.lender }}</div></div>
-<div class="metric"><div class="k">Safe for you</div><div class="v">Rs.{{ o.amount.use }}</div></div>
-<div class="metric"><div class="k">EMI ceiling</div><div class="v">Rs.{{ o.ceiling }}</div></div>
+{% if o.income.income_safe > 0 %}
+<p>Your total EMIs would take {{ (o.emi_share_used * 100)|round(1) }}% of your monthly income, but your safe limit is {{ (o.max_emi_share * 100)|round(0) }}%.</p>
+{% else %}
+<p>You have no counted monthly income, so any EMI is over the limit.</p>
+{% endif %}
+<p class="small">What would change this: {{ o.verdict.flip }}</p>
+<h2>How much to take</h2>
+<div class="metrics" style="grid-template-columns:repeat(2,1fr)">
+<div class="metric"><div class="k">Bank will likely approve</div><div class="v">Rs.{{ o.amount.lender }}</div></div>
+<div class="metric"><div class="k">You can safely handle</div><div class="v">Rs.{{ o.amount.safe }}</div></div>
 </div>
-<p>Fair rate: {{ o.rate.low }}% - {{ o.rate.high }}% (APR {{ o.fair_apr[0] }}% - {{ o.fair_apr[1] }}%).</p>
-<p>Your EMI for wanted Rs.{{ o.amount.wanted }}: Rs.{{ o.new_emi }} over {{ o.std_months }} months. Stress: {{ "passes" if o.stress_pass else "fails" }}.</p>
+<p><b>Take Rs.{{ o.amount.use }}</b> — always the smaller of the two.</p>
+<h2>Fair interest rate</h2>
+<p>A fair yearly rate for you is {{ o.rate.low }}% to {{ o.rate.high }}%. Including fees, the true yearly cost is {{ o.fair_apr[0] }}% to {{ o.fair_apr[1] }}%. If a lender quotes above this, it is costly.</p>
+<h2>Monthly limit</h2>
+<div class="metrics" style="grid-template-columns:repeat(1,1fr)">
+<div class="metric"><div class="k">Keep new EMI under</div><div class="v">Rs.{{ o.ceiling }} per month</div></div>
+</div>
+<p>Rs.{{ o.amount.wanted }} at your pace means Rs.{{ o.new_emi }} every month for {{ o.std_months }} months.</p>
+{% if o.tenure_capped %}
+<p class="small">Note: your chosen pace is longer than the typical {{ o.max_months }} months lenders offer for this age and loan type. The math below still follows your choice.</p>
+{% endif %}
+{% if o.std_max_months != o.std_months %}
+{% if o.std_max_months > o.std_months %}
+<p>Paying over your {{ (o.std_months // 12) if o.std_months % 12 == 0 else (o.std_months / 12)|round(1) }} years costs Rs.{{ o.total_interest }} in total interest. If you stretch to {{ (o.std_max_months // 12) if o.std_max_months % 12 == 0 else (o.std_max_months / 12)|round(1) }} years, the EMI falls to Rs.{{ o.alt_emi }} but total interest grows to Rs.{{ o.alt_total_interest }}.</p>
+{% else %}
+<p>Paying over your {{ (o.std_months // 12) if o.std_months % 12 == 0 else (o.std_months / 12)|round(1) }} years costs Rs.{{ o.total_interest }} in total interest. If you finish in the typical {{ (o.std_max_months // 12) if o.std_max_months % 12 == 0 else (o.std_max_months / 12)|round(1) }} years, the EMI rises to Rs.{{ o.alt_emi }} but total interest falls to Rs.{{ o.alt_total_interest }}.</p>
+{% endif %}
+{% endif %}
+<p>If your income fell 20%, you would still have Rs.{{ o.shock_income_surplus }} left over. If the rate rose 2%, your EMI would become Rs.{{ o.shock_rate_emi }}. Overall this loan {{ "handles both shocks" if o.stress_pass else "breaks under a shock" }}.</p>
 <p class="small">{{ o.why.amount_reason }} {{ o.why.rate_reason }} {{ o.why.ceiling_reason }}</p>
-<h3>Negotiation Card</h3>
-<ul class="card">{% for line in o.card.lines %}<li>{{ line }}</li>{% endfor %}</ul>
-<p class="small">Confidence: {{ o.confidence.level }}. Ranges are ranges; fewer answers = wider band.</p>
-<form method="post" action="{{ url_for('restart') }}"><button class="primary">Restart</button></form>
+<p class="small">Trust level: {{ o.confidence.level }} — you answered {{ answered }} of {{ total }} questions. Fewer answers always mean wider ranges.</p>
+<p><a href="{{ url_for('card') }}"><button class="primary">Open Negotiation Card</button></a></p>
+<form method="post" action="{{ url_for('restart') }}"><button class="ghost">Restart</button></form>
 {% endblock %}
