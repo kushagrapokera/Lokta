@@ -2,7 +2,7 @@
 
 Self-check before walking into a lender: should you borrow, how much is safe, fair rate, EMI ceiling, plus a one-page Negotiation Card. No login, no bureau pull, nothing stored.
 
-## Run locally in under 5 minutes
+## Steps to Run locally
 
 Requires conda env `lokta` with Python 3.11 (or any Python 3.10+).
 
@@ -11,9 +11,6 @@ conda activate lokta
 pip install -r requirements.txt   # flask + pytest, one time
 python flask_app.py               # opens http://127.0.0.1:5000
 ```
-
-Offline after install. No backend, no API key.
-
 ## Test
 
 ```bash
